@@ -1,5 +1,5 @@
 import DB from "../connection/mysql2.js";
-import { ERROR_ACCESS_LOG } from "../common/constant.js";
+import { ERROR_DB_ACCESS_LOG } from "../common/constant.js";
 
 export const getUserById = async (req, res, next) => {
   const { id } = req.params;
@@ -12,7 +12,7 @@ export const getUserById = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       message: "Server Error",
-      error: ERROR_ACCESS_LOG,
+      error: ERROR_DB_ACCESS_LOG,
     });
   }
   res.status(200).json({

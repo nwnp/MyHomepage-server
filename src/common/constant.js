@@ -1,1 +1,1 @@
-export const ERROR_ACCESS_LOG = "DB Access Error";
+export const ERROR_DB_ACCESS_LOG = "DB Access Error";
