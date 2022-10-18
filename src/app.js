@@ -23,7 +23,7 @@ const typeDefs = readFileSync("./src/graphql/typeDefs.graphql", "UTF-8");
 
 const start = async () => {
   const context = { DB };
-  const apolloServer = new ApolloServer({ typeDefs, resolvers, context });
+  const apolloServer = new ApolloServer({ typeDefs, resolvers });
   const graphqlPlayground = expressPlayground.default;
 
   await apolloServer.start();

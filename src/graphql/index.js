@@ -4,6 +4,6 @@ import { Type } from "./resolvers/type.js";
 
 export const resolvers = {
   Query,
-  Mutation,
-  ...Type,
+  // Mutation,
+  // ...Type,
 };

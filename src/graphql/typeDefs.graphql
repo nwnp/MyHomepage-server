@@ -5,6 +5,11 @@ type User {
   address: String
 }
 
+input UserData {
+  email: String!
+  password: String!
+}
+
 type Query {
-  me: User
+  me(input: UserData!): User
 }
