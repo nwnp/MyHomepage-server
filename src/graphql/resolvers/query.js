@@ -1,4 +1,5 @@
 import { sample_data } from "../../common/sample_data.js";
+import { emptyDataForUser } from "../../common/emptyData.js";
 import db from "../../connection/mysql2.js";
 
 export const Query = {
@@ -15,13 +16,7 @@ export const Query = {
     } catch (error) {
       console.log("error", error);
     }
-    if (result.password !== password) {
-      return {
-        id: "",
-        email: "",
-        address: "",
-      };
-    }
+    if (result.password !== password) return emptyDataForUser;
     return result;
   },
 };
