@@ -1,11 +1,15 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { VisitLog } from 'src/common/databases/visit-logs.entity';
+import { Post } from 'src/common/databases/posts.entity';
+import { BGM } from 'src/common/databases/bgms.entity';
 import { User } from 'src/common/databases/users.entity';
 import { LoggerMiddle } from 'src/common/middlewares/logger.middleware';
 import { UsersModule } from 'src/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { Comment } from 'src/common/databases/comment.entity';
 
 @Module({
   imports: [
@@ -17,7 +21,7 @@ import { AppService } from './app.service';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_SCHEMA,
-      entities: [User],
+      entities: [User, Post, VisitLog, BGM, Comment],
       synchronize: true,
     }),
     UsersModule,
