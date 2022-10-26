@@ -12,7 +12,6 @@ import { AppService } from './app.service';
 import { Comment } from 'src/common/databases/comment.entity';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
 
 @Module({
   imports: [

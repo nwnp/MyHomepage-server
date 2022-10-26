@@ -7,11 +7,16 @@ import { Repository, DataSource } from 'typeorm';
 export class UsersDao {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
-    private DataSource: DataSource,
+    private dataSource: DataSource,
   ) {}
 
   async getUserById(id: number) {
     const user = await this.usersRepository.findOne({ where: { id } });
+    return user;
+  }
+
+  async getUserByEmail(email: string) {
+    const user = await this.usersRepository.findOne({ where: { email } });
     return user;
   }
 }
