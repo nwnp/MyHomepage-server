@@ -1,5 +1,11 @@
 import { ObjectType } from '@nestjs/graphql';
-import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 
 @ObjectType()
 export class UserSignupDto {
@@ -18,14 +24,18 @@ export class UserSignupDto {
   password: string;
 
   @IsString()
+  @IsOptional()
   gender: string;
 
   @IsString()
+  @IsOptional()
   job: string;
 
   @IsString()
+  @IsOptional()
   githubUrl: string;
 
+  @IsOptional()
   @IsString()
   blogUrl: string;
 }
