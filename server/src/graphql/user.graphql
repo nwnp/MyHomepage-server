@@ -1,0 +1,14 @@
+type User {
+  id: ID!
+  email: String!
+  password: String!
+  nickname: String!
+  gender: String
+  job: String
+  githubUrl: String
+  blogUrl: String
+}
+
+type Query {
+  me: User!
+}
