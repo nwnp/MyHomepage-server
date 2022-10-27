@@ -29,4 +29,10 @@ export const ERROR = {
       success: false,
     },
   },
+  SIGNUP_ERROR: {
+    extensions: {
+      code: 'DB_SAVE_ERROR',
+      success: false,
+    },
+  },
 };
