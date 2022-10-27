@@ -23,6 +23,11 @@ export class UserResolver {
     return this.usersDao.allUser();
   }
 
+  @Query()
+  async searchUser(@Args('nickname') nickname: string) {
+    return await this.usersDao.getUserByNickname(nickname);
+  }
+
   @Mutation(() => User)
   async signup(@Args('user') user: UserSignupDto) {
     const { email, password, nickname, blogUrl, githubUrl, job, gender } = user;

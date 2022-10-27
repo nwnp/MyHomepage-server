@@ -14,28 +14,48 @@ export class UsersDao {
   ) {}
 
   async getUserById(id: number) {
-    const user = await this.usersRepository.findOne({ where: { id } });
-    return user;
+    try {
+      const user = await this.usersRepository.findOne({ where: { id } });
+      return user;
+    } catch (error) {
+      throw new GraphQLError('Server Error', ERROR.INVALID_USER);
+    }
   }
 
   async getUserByEmail(email: string) {
-    const user = await this.usersRepository.findOne({ where: { email } });
-    return user;
+    try {
+      const user = await this.usersRepository.findOne({ where: { email } });
+      return user;
+    } catch (error) {
+      throw new GraphQLError('Server Error', ERROR.INVALID_USER);
+    }
   }
 
   async getUserByNickname(nickname: string) {
-    const user = await this.usersRepository.findOne({ where: { nickname } });
-    return user;
+    try {
+      const user = await this.usersRepository.findOne({ where: { nickname } });
+      return user;
+    } catch (error) {
+      throw new GraphQLError('Server Error', ERROR.INVALID_USER);
+    }
   }
 
   async getUserByBlogUrl(blogUrl: string) {
-    const user = await this.usersRepository.findOne({ where: { blogUrl } });
-    return user;
+    try {
+      const user = await this.usersRepository.findOne({ where: { blogUrl } });
+      return user;
+    } catch (error) {
+      throw new GraphQLError('Server Error', ERROR.INVALID_USER);
+    }
   }
 
   async getUserByGithubUrl(githubUrl: string) {
-    const user = await this.usersRepository.findOne({ where: { githubUrl } });
-    return user;
+    try {
+      const user = await this.usersRepository.findOne({ where: { githubUrl } });
+      return user;
+    } catch (error) {
+      throw new GraphQLError('Server Error', ERROR.INVALID_USER);
+    }
   }
 
   async signup(userInfo: UserSignupDto) {
