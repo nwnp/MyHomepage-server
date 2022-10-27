@@ -18,6 +18,11 @@ export class UserResolver {
     return isExistUser;
   }
 
+  @Query()
+  async allUser() {
+    return this.usersDao.allUser();
+  }
+
   @Mutation(() => User)
   async signup(@Args('user') user: UserSignupDto) {
     const { email, password, nickname, blogUrl, githubUrl, job, gender } = user;

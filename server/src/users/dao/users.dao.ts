@@ -56,4 +56,9 @@ export class UsersDao {
       await queryRunner.release();
     }
   }
+
+  async allUser() {
+    const users = await this.usersRepository.find();
+    return users;
+  }
 }

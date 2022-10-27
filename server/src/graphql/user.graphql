@@ -21,6 +21,7 @@ input UserData {
 
 type Query {
   me(id: ID!): User!
+  allUser: [User!]
 }
 
 type Mutation {
