@@ -2,9 +2,11 @@ import { UsersDao } from './../dao/users.dao';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { ERROR } from '../../common/constant/error-handling';
-import { UserSignupDto } from '../dto/signup.dto';
+import { UserSignupDto } from '../dto/user.signup.dto';
 import { User } from 'src/common/databases/users.entity';
 import * as bcrypt from 'bcrypt';
+import { UserUpdateDto } from '../dto/user.update.dto';
+import { UserCheckDto } from '../dto/user.check.dto';
 
 @Resolver('user')
 export class UserResolver {
@@ -25,7 +27,25 @@ export class UserResolver {
 
   @Query()
   async searchUser(@Args('nickname') nickname: string) {
-    return await this.usersDao.getUserByNickname(nickname);
+    const searchedUser = await this.usersDao.getUserByNickname(nickname);
+    if (!searchedUser)
+      throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
+
+    return searchedUser;
+  }
+
+  @Query()
+  async userCheck(@Args('userInfo') userInfo: UserCheckDto) {
+    const user = await this.usersDao.getUserByEmail(userInfo.email);
+    const compared = await bcrypt.compare(userInfo.password, user.password);
+
+    if (!user) throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
+    if (userInfo.password !== userInfo.passwordCheck)
+      throw new GraphQLError('비밀번호를 틀렸습니다.', ERROR.INVALID_PASSWORD);
+    if (!compared)
+      throw new GraphQLError('비밀번호를 틀렸습니다.', ERROR.INVALID_PASSWORD);
+
+    return true;
   }
 
   @Mutation(() => User)
@@ -70,5 +90,21 @@ export class UserResolver {
     };
 
     return await this.usersDao.signup(newUser);
+  }
+
+  @Mutation(() => User)
+  async updateUser(@Args('user') user: UserUpdateDto) {
+    const userInfo = {
+      id: user.id,
+      password: user.password,
+      nickname: user.nickname,
+      githubUrl: user.githubUrl,
+      blogUrl: user.blogUrl,
+    };
+
+    const updatedUser = await this.usersDao.update(userInfo);
+    console.log(updatedUser);
+
+    return updatedUser;
   }
 }

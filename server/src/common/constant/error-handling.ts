@@ -35,4 +35,16 @@ export const ERROR = {
       success: false,
     },
   },
+  INVALID_PASSWORD: {
+    extensions: {
+      code: 'PASSWORD_CHECK',
+      success: false,
+    },
+  },
+  UPDATE_ERROR: {
+    extensions: {
+      code: 'DB_UPDATE_ERROR',
+      success: false,
+    },
+  },
 };

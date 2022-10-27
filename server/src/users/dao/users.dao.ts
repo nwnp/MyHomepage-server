@@ -4,7 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/common/databases/users.entity';
 import { Repository, DataSource } from 'typeorm';
-import { UserSignupDto } from '../dto/signup.dto';
+import { UserSignupDto } from '../dto/user.signup.dto';
+import { UserUpdateDto } from '../dto/user.update.dto';
 
 @Injectable()
 export class UsersDao {
@@ -80,5 +81,35 @@ export class UsersDao {
   async allUser() {
     const users = await this.usersRepository.find();
     return users;
+  }
+
+  async update(user: UserUpdateDto) {
+    const logger = new Logger('DB');
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      logger.verbose('Start Transaction for update user');
+      const updatedUser = await this.dataSource
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          nickname: user.nickname,
+          password: user.password,
+          githubUrl: user.githubUrl,
+          blogUrl: user.blogUrl,
+        })
+        .where('id = :id', { id: parseInt(user.id) })
+        .execute();
+
+      logger.verbose('Success transaction');
+      return updatedUser;
+    } catch (error) {
+      logger.error('Transaction ERROR', error);
+      throw new GraphQLError('Server Error', ERROR.UPDATE_ERROR);
+    } finally {
+      await queryRunner.release();
+      logger.verbose('Released Transaction for update user');
+    }
   }
 }
