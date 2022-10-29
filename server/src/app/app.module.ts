@@ -31,6 +31,10 @@ import { GraphQLModule } from '@nestjs/graphql';
       debug: false,
       playground: true,
       typePaths: ['./**/*.graphql'],
+      cors: {
+        origin: 'http://localhost:8081',
+        credentials: true,
+      },
     }),
     UsersModule,
   ],
