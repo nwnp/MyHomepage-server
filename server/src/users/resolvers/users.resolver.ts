@@ -7,6 +7,8 @@ import { User } from 'src/common/databases/users.entity';
 import * as bcrypt from 'bcrypt';
 import { UserUpdateDto } from '../dto/user.update.dto';
 import { UserCheckDto } from '../dto/user.check.dto';
+import { userInfo } from 'os';
+import { UserLoginDto } from '../dto/user.login.dto';
 
 @Resolver('user')
 export class UserResolver {
@@ -32,6 +34,19 @@ export class UserResolver {
       throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
 
     return searchedUser;
+  }
+
+  @Query()
+  async login(@Args('userInfo') userInfo: UserLoginDto) {
+    const isExistUser = await this.usersDao.getUserByEmail(userInfo.email);
+    const compared = await bcrypt.compare(
+      userInfo.password,
+      isExistUser.password,
+    );
+    if (!isExistUser)
+      throw new GraphQLError('존재하지 않는 회원입니다.', ERROR.INVALID_USER);
+    if (!compared)
+      throw new GraphQLError('비밀번호를 틀렸습니다.', ERROR.INVALID_PASSWORD);
   }
 
   @Query()

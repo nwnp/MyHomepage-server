@@ -26,11 +26,17 @@ input UserCheck {
   passwordCheck: String!
 }
 
+input UserLoginInfo {
+  email: String!
+  password: String!
+}
+
 type Query {
   me(id: ID!): User!
   allUser: [User!]!
   searchUser(nickname: String!): User!
   userCheck(userInfo: UserCheck!): Boolean!
+  login(userInfo: UserLoginInfo): User!
 }
 
 type Mutation {
