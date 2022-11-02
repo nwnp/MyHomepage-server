@@ -32,6 +32,7 @@ export class UsersService {
     return searchedUser;
   }
 
+  // TODO: logic 수정
   async login(userInfo: UserLoginModel): Promise<string> {
     const isExistUser = await this.usersDao.getUserByEmail(userInfo.email);
     const compared = await bcrypt.compare(
@@ -92,11 +93,8 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, SALT);
     const newUser = {
-      email,
+      ...user,
       password: hashedPassword,
-      nickname,
-      blogUrl,
-      githubUrl,
       job: userJob,
       gender: userGender,
     };
@@ -106,14 +104,7 @@ export class UsersService {
 
   // TODO: error 고치기
   async updateUser(user: UserUpdateModel): Promise<any> {
-    const userInfo = {
-      id: user.id,
-      password: user.password,
-      nickname: user.nickname,
-      githubUrl: user.githubUrl,
-      blogUrl: user.blogUrl,
-    };
-
+    const userInfo = { ...user };
     const updatedUser = await this.usersDao.update(userInfo);
     console.log(updatedUser);
 
