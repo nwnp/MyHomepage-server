@@ -2,13 +2,12 @@ import { UsersDao } from './../dao/users.dao';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { ERROR } from '../../common/constant/error-handling';
-import { UserSignupDto } from '../dto/user.signup.dto';
+import { UserSignupDto } from '../models/user.signup.model';
 import { User } from 'src/common/databases/users.entity';
 import * as bcrypt from 'bcrypt';
-import { UserUpdateDto } from '../dto/user.update.dto';
-import { UserCheckDto } from '../dto/user.check.dto';
-import { userInfo } from 'os';
-import { UserLoginDto } from '../dto/user.login.dto';
+import { UserUpdateDto } from '../models/user.update.model';
+import { UserCheckDto } from '../models/user.check.model';
+import { UserLoginDto } from '../models/user.login.model';
 
 @Resolver('user')
 export class UserResolver {

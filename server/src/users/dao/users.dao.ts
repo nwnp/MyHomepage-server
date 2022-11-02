@@ -4,8 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/common/databases/users.entity';
 import { Repository, DataSource } from 'typeorm';
-import { UserSignupDto } from '../dto/user.signup.dto';
-import { UserUpdateDto } from '../dto/user.update.dto';
+import { UserSignupDto } from '../models/user.signup.model';
+import { UserUpdateDto } from '../models/user.update.model';
 
 @Injectable()
 export class UsersDao {
