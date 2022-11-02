@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 
 @ObjectType()
-export class UserSignupDto {
+export class UserSignupModel {
   @Field(() => String)
   @IsEmail()
   @IsNotEmpty()

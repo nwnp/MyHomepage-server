@@ -4,8 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/common/databases/users.entity';
 import { Repository, DataSource } from 'typeorm';
-import { UserSignupDto } from '../models/user.signup.model';
-import { UserUpdateDto } from '../models/user.update.model';
+import { UserSignupModel } from '../models/user.signup.model';
+import { UserUpdateModel } from '../models/user.update.model';
 
 @Injectable()
 export class UsersDao {
@@ -59,7 +59,7 @@ export class UsersDao {
     }
   }
 
-  async signup(userInfo: UserSignupDto) {
+  async signup(userInfo: UserSignupModel) {
     const logger = new Logger('DB');
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -83,7 +83,7 @@ export class UsersDao {
     return users;
   }
 
-  async update(user: UserUpdateDto) {
+  async update(user: UserUpdateModel) {
     const logger = new Logger('DB');
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();

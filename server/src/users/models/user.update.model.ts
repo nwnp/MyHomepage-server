@@ -2,7 +2,7 @@ import { IsOptional, IsString, Length, IsNotEmpty } from 'class-validator';
 import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
-export class UserUpdateDto {
+export class UserUpdateModel {
   @Field(() => String)
   @IsNotEmpty()
   @IsString()

@@ -2,7 +2,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
 
 @ObjectType()
-export class UserCheckDto {
+export class UserCheckModel {
   @Field(() => String)
   @IsNotEmpty()
   @IsString()
