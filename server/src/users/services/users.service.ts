@@ -4,7 +4,7 @@ import { GraphQLError } from 'graphql';
 import { Injectable } from '@nestjs/common';
 import { UsersDao } from '../dao/users.dao';
 import { User } from 'src/common/databases/users.entity';
-import { UserLoginModel } from '../models/user.login.model';
+import { UserLoginInput } from '../models/user.login.model';
 import * as bcrypt from 'bcrypt';
 import { UserCheckModel } from '../models/user.check.model';
 import { UserUpdateModel } from '../models/user.update.model';
@@ -30,21 +30,6 @@ export class UsersService {
       throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
 
     return searchedUser;
-  }
-
-  // TODO: logic 수정
-  async login(userInfo: UserLoginModel): Promise<string> {
-    const isExistUser = await this.usersDao.getUserByEmail(userInfo.email);
-    const compared = await bcrypt.compare(
-      userInfo.password,
-      isExistUser.password,
-    );
-    if (!isExistUser)
-      throw new GraphQLError('존재하지 않는 회원입니다.', ERROR.INVALID_USER);
-    if (!compared)
-      throw new GraphQLError('비밀번호를 틀렸습니다.', ERROR.INVALID_PASSWORD);
-
-    return 'hello world';
   }
 
   async userCheck(userInfo: UserCheckModel): Promise<boolean> {

@@ -36,10 +36,10 @@ type Query {
   allUser: [User!]!
   searchUser(nickname: String!): User!
   userCheck(userInfo: UserCheck!): Boolean!
-  login(userInfo: UserLoginInfo): User!
 }
 
 type Mutation {
   signup(user: UserData!): User!
   updateUser(user: UserData!): User!
+  login(userInfo: UserLoginInfo): String!
 }

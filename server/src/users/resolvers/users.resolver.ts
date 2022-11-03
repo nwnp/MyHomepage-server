@@ -1,14 +1,18 @@
+import { AuthService } from './../../auth/services/auth.service';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserSignupModel } from '../models/user.signup.model';
 import { User } from 'src/common/databases/users.entity';
 import { UserUpdateModel } from '../models/user.update.model';
 import { UserCheckModel } from '../models/user.check.model';
-import { UserLoginModel } from '../models/user.login.model';
+import { UserLoginInput } from '../models/user.login.model';
 import { UsersService } from '../services/users.service';
 
 @Resolver('user')
 export class UserResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Query(() => User)
   async me(@Args({ name: 'id', type: () => Int }) id: number): Promise<User> {
@@ -25,11 +29,9 @@ export class UserResolver {
     return this.usersService.searchUser(nickname);
   }
 
-  // TODO: return 수정
-  // @Query(() => User)
-  @Query()
-  async login(@Args('userInfo') userInfo: UserLoginModel): Promise<string> {
-    return this.usersService.login(userInfo);
+  @Mutation(() => User)
+  async login(@Args('userInfo') userInfo: UserLoginInput): Promise<string> {
+    return this.authService.validateUser(userInfo);
   }
 
   @Query(() => Boolean)
