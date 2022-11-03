@@ -10,6 +10,8 @@ import { UsersModule } from 'src/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Comment } from 'src/common/databases/comment.entity';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
@@ -23,6 +25,16 @@ import { Comment } from 'src/common/databases/comment.entity';
       database: process.env.DB_SCHEMA,
       entities: [User, Post, VisitLog, BGM, Comment],
       synchronize: true,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      debug: false,
+      playground: true,
+      typePaths: ['./**/*.graphql'],
+      cors: {
+        origin: 'http://localhost:8081',
+        credentials: true,
+      },
     }),
     UsersModule,
   ],

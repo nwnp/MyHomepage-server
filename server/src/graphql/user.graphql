@@ -1,0 +1,45 @@
+type User {
+  id: ID!
+  email: String!
+  password: String!
+  nickname: String!
+  gender: String
+  job: String
+  githubUrl: String
+  blogUrl: String
+}
+
+input UserData {
+  id: ID
+  email: String
+  password: String
+  nickname: String
+  gender: String
+  job: String
+  githubUrl: String
+  blogUrl: String
+}
+
+input UserCheck {
+  email: String!
+  password: String!
+  passwordCheck: String!
+}
+
+input UserLoginInfo {
+  email: String!
+  password: String!
+}
+
+type Query {
+  me(id: ID!): User!
+  allUser: [User!]!
+  searchUser(nickname: String!): User!
+  userCheck(userInfo: UserCheck!): Boolean!
+}
+
+type Mutation {
+  signup(user: UserData!): User!
+  updateUser(user: UserData!): User!
+  login(userInfo: UserLoginInfo): String!
+}

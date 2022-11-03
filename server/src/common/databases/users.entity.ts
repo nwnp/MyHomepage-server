@@ -57,7 +57,6 @@ export class User {
   @Column({
     nullable: true,
     default: 'gitless',
-    unique: true,
   })
   @IsString()
   githubUrl: string;
@@ -65,7 +64,6 @@ export class User {
   @Column({
     nullable: true,
     default: 'blogless',
-    unique: true,
   })
   @IsString()
   blogUrl: string;
