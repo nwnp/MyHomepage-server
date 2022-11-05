@@ -16,6 +16,7 @@ export class AuthService {
 
   async validateUser(userInfo: UserLoginInput): Promise<string> {
     const user = await this.usersDao.getUserByEmail(userInfo.email);
+    const date = new Date();
     if (!user) throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
 
     const compared: boolean = await bcrypt.compare(
@@ -49,6 +50,12 @@ export class AuthService {
       await this.usersDao.registerRefreshToken(user.id, refreshToken);
       logger.debug('Updated refresh token');
     }
+
+    /**
+     * hint
+     */
+    // const verifiedToken = this.jwtService.verify(user.refreshToken);
+    // console.log(date >= new Date(verifiedToken.exp * 1000));
 
     return accessToken;
   }
