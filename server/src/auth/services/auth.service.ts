@@ -14,6 +14,19 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async updateRefreshToken(userId: number) {
+    const logger = new Logger('TOKEN');
+    const refreshToken = this.jwtService.sign(
+      { id: userId },
+      {
+        secret: process.env.SECRET_KEY,
+        expiresIn: '604800s',
+      },
+    );
+    await this.usersDao.registerRefreshToken(userId, refreshToken);
+    logger.debug('Updated refresh token');
+  }
+
   async validateUser(userInfo: UserLoginInput): Promise<string> {
     const user = await this.usersDao.getUserByEmail(userInfo.email);
     const date = new Date();
@@ -33,29 +46,16 @@ export class AuthService {
         expiresIn: '7200s',
       },
     );
-    const refreshToken = this.jwtService.sign(
-      { id: user.id },
-      {
+
+    if (!user.refreshToken) await this.updateRefreshToken(user.id);
+    else {
+      const updatedUser = await this.usersDao.getUserByEmail(userInfo.email);
+      const verifiedToken = this.jwtService.verify(updatedUser.refreshToken, {
         secret: process.env.SECRET_KEY,
-        expiresIn: '604800s',
-      },
-    );
-
-    // TODO: 만료시간 계산 후에 만료가 안됐을 때, update 해주는 걸로 수정
-    /**
-     * 지금은 refreshToken이 있으면 만료기간 생각안하고 바로 로그인됨
-     */
-    if (!user.refreshToken.length) {
-      const logger = new Logger('TOKEN');
-      await this.usersDao.registerRefreshToken(user.id, refreshToken);
-      logger.debug('Updated refresh token');
+      });
+      if (date >= new Date(verifiedToken.exp * 1000))
+        await this.updateRefreshToken(user.id);
     }
-
-    /**
-     * hint
-     */
-    // const verifiedToken = this.jwtService.verify(user.refreshToken);
-    // console.log(date >= new Date(verifiedToken.exp * 1000));
 
     return accessToken;
   }
