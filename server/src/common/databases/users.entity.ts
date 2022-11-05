@@ -68,6 +68,10 @@ export class User {
   @IsString()
   blogUrl: string;
 
+  @Column({ nullable: true, type: 'varchar', length: '1000' })
+  @IsString()
+  refreshToken: string;
+
   @CreateDateColumn()
   @IsDate()
   createdAt: Date;

@@ -112,4 +112,27 @@ export class UsersDao {
       logger.verbose('Released Transaction for update user');
     }
   }
+
+  async registerRefreshToken(id: number, refreshToken: string) {
+    const logger = new Logger('DB');
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const updatedUser = await this.dataSource
+        .createQueryBuilder()
+        .update(User)
+        .set({ refreshToken })
+        .where('id = :id', { id })
+        .execute();
+      return updatedUser;
+    } catch (error) {
+      logger.error('Transaction ERROR');
+      console.log(error);
+      throw new GraphQLError('Server Error', ERROR.UPDATE_ERROR);
+    } finally {
+      await queryRunner.release();
+      logger.verbose('Released Transaction for update login');
+    }
+  }
 }

@@ -29,9 +29,10 @@ export class UserResolver {
     return this.usersService.searchUser(nickname);
   }
 
-  @Mutation(() => User)
+  @Mutation(() => String)
   async login(@Args('userInfo') userInfo: UserLoginInput): Promise<string> {
-    return this.authService.validateUser(userInfo);
+    const accessToken = await this.authService.validateUser(userInfo);
+    return accessToken;
   }
 
   @Query(() => Boolean)
