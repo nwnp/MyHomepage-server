@@ -1,4 +1,3 @@
-import { IUserToken } from './../../common/interfaces/user.interface';
 import { ERROR } from './../../common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { UsersDao } from './../../users/dao/users.dao';
@@ -24,7 +23,7 @@ export class AuthService {
       },
     );
     await this.usersDao.registerRefreshToken(userId, refreshToken);
-    logger.debug('Updated refresh token');
+    logger.verbose('Updated refresh token');
   }
 
   async validateUser(userInfo: UserLoginInput): Promise<string> {
