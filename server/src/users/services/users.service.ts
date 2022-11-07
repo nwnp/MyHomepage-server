@@ -4,10 +4,10 @@ import { GraphQLError } from 'graphql';
 import { Injectable } from '@nestjs/common';
 import { UsersDao } from '../dao/users.dao';
 import { User } from 'src/common/databases/users.entity';
-import { UserLoginInput } from '../models/user.login.model';
 import * as bcrypt from 'bcrypt';
 import { UserCheckModel } from '../models/user.check.model';
 import { UserUpdateModel } from '../models/user.update.model';
+import { UserLogoutModel } from '../models/user.logout.model';
 
 @Injectable()
 export class UsersService {
@@ -87,12 +87,15 @@ export class UsersService {
     return await this.usersDao.signup(newUser);
   }
 
-  // TODO: error 고치기
+  async logout(id: UserLogoutModel) {
+    const userId = id;
+    const updatedUser = await this.usersDao.deleteRefreshToken(userId);
+    return updatedUser;
+  }
+
   async updateUser(user: UserUpdateModel): Promise<any> {
     const userInfo = { ...user };
     const updatedUser = await this.usersDao.update(userInfo);
-    console.log(updatedUser);
-
     return updatedUser;
   }
 }

@@ -45,6 +45,7 @@ type Query {
 
 type Mutation {
   signup(user: UserData!): User!
-  updateUser(user: UserData!): User!
+  updateUser(user: UserData!): Boolean!
   login(userInfo: UserLoginInfo): Token!
+  logout(userId: ID!): Boolean!
 }

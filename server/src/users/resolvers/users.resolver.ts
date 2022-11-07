@@ -8,6 +8,7 @@ import { UserLoginInput } from '../models/user.login.model';
 import { UsersService } from '../services/users.service';
 import { IUserToken } from 'src/common/interfaces/user.interface';
 import { Token } from 'graphql';
+import { UserLogoutModel } from '../models/user.logout.model';
 
 @Resolver('user')
 export class UserResolver {
@@ -49,9 +50,13 @@ export class UserResolver {
     return this.usersService.signup(user);
   }
 
-  // TODO: return 수정
+  @Mutation(() => Boolean)
+  async logout(@Args('userId') userId: UserLogoutModel): Promise<boolean> {
+    return (await this.usersService.logout(userId)).affected ? true : false;
+  }
+
   @Mutation(() => User)
-  async updateUser(@Args('user') user: UserUpdateModel): Promise<any> {
-    return this.usersService.updateUser(user);
+  async updateUser(@Args('user') user: UserUpdateModel): Promise<boolean> {
+    return (await this.usersService.updateUser(user)).affected ? true : false;
   }
 }
