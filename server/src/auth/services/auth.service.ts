@@ -1,3 +1,4 @@
+import { IUserToken } from './../../common/interfaces/user.interface';
 import { ERROR } from './../../common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { UsersDao } from './../../users/dao/users.dao';
@@ -24,9 +25,11 @@ export class AuthService {
     );
     await this.usersDao.registerRefreshToken(userId, refreshToken);
     logger.verbose('Updated refresh token');
+
+    return refreshToken;
   }
 
-  async validateUser(userInfo: UserLoginInput): Promise<string> {
+  async validateUser(userInfo: UserLoginInput): Promise<IUserToken> {
     const user = await this.usersDao.getUserByEmail(userInfo.email);
     const date = new Date();
     if (!user) throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
@@ -46,16 +49,21 @@ export class AuthService {
       },
     );
 
-    if (!user.refreshToken) await this.updateRefreshToken(user.id);
-    else {
+    let refreshToken: string = user.refreshToken;
+    if (!refreshToken) {
+      refreshToken = await this.updateRefreshToken(user.id);
+    } else {
       const updatedUser = await this.usersDao.getUserByEmail(userInfo.email);
       const verifiedToken = this.jwtService.verify(updatedUser.refreshToken, {
         secret: process.env.SECRET_KEY,
       });
       if (date >= new Date(verifiedToken.exp * 1000))
-        await this.updateRefreshToken(user.id);
+        refreshToken = await this.updateRefreshToken(user.id);
     }
 
-    return accessToken;
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }

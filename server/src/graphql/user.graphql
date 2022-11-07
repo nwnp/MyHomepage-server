@@ -9,6 +9,11 @@ type User {
   blogUrl: String
 }
 
+type Token {
+  accessToken: String!
+  refreshToken: String!
+}
+
 input UserData {
   id: ID
   email: String
@@ -41,5 +46,5 @@ type Query {
 type Mutation {
   signup(user: UserData!): User!
   updateUser(user: UserData!): User!
-  login(userInfo: UserLoginInfo): String!
+  login(userInfo: UserLoginInfo): Token!
 }
