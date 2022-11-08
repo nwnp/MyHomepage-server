@@ -87,11 +87,6 @@ export class UsersService {
     return await this.usersDao.signup(newUser);
   }
 
-  async logout(id: number) {
-    const updatedUser = await this.usersDao.deleteRefreshToken(id);
-    return updatedUser;
-  }
-
   async updateUser(user: UserUpdateModel): Promise<any> {
     const userInfo = { ...user };
     const updatedUser = await this.usersDao.update(userInfo);

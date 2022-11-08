@@ -3,7 +3,7 @@ import { GraphQLError } from 'graphql';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/common/databases/users.entity';
-import { Repository, DataSource, createQueryBuilder } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { UserSignupModel } from '../models/user.signup.model';
 import { UserUpdateModel } from '../models/user.update.model';
 import { Token } from 'src/common/databases/token.entity';
@@ -107,70 +107,12 @@ export class UsersDao {
       this.logger.verbose('Success transaction');
       return updatedUser;
     } catch (error) {
+      await queryRunner.rollbackTransaction();
       this.logger.error('Transaction ERROR', error);
       throw new GraphQLError('Server Error', ERROR.UPDATE_ERROR);
     } finally {
       await queryRunner.release();
       this.logger.verbose('Released Transaction for update user');
-    }
-  }
-
-  async registerRefreshToken(id: number, refreshToken: string) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      this.logger.verbose('Start Transaction to update refresh token');
-      const updatedToken = await this.dataSource
-        .createQueryBuilder()
-        .insert()
-        .into(Token)
-        .values([{ refreshToken }])
-        .execute();
-
-      let updatedUser;
-      if (updatedToken.raw.affectedRows) {
-        updatedUser = await this.dataSource
-          .createQueryBuilder()
-          .update(User)
-          .set({ TokenId: updatedToken.raw.insertId })
-          .where('id = :id', { id })
-          .execute();
-      }
-      this.logger.verbose('Success Transaction');
-      return updatedUser;
-    } catch (error) {
-      this.logger.error('Transaction ERROR');
-      console.log(error);
-      throw new GraphQLError('Server Error', ERROR.UPDATE_ERROR);
-    } finally {
-      await queryRunner.release();
-      this.logger.verbose('Released Transaction to update refresh token');
-    }
-  }
-
-  async deleteRefreshToken(id: number) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      const refreshToken = null;
-      this.logger.verbose('Start Transaction to update refresh token');
-      const updatedUser = await this.dataSource
-        .createQueryBuilder()
-        .update(User)
-        .set({ refreshToken })
-        .where('id = :id', { id })
-        .execute();
-      this.logger.verbose('Success Transaction');
-      return updatedUser;
-    } catch (error) {
-      this.logger.error('Transaction ERROR');
-      console.log(error);
-      throw new GraphQLError('Server Error', ERROR.UPDATE_ERROR);
-    } finally {
-      await queryRunner.release();
-      this.logger.verbose('Released Transaction to delete refresh token');
     }
   }
 

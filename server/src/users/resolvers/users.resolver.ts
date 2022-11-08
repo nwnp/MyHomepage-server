@@ -50,11 +50,6 @@ export class UserResolver {
     return this.usersService.signup(user);
   }
 
-  @Mutation(() => Boolean)
-  async logout(@Args('userId') userId: number): Promise<boolean> {
-    return (await this.usersService.logout(userId)).affected ? true : false;
-  }
-
   @Mutation(() => User)
   async updateUser(@Args('user') user: UserUpdateModel): Promise<boolean> {
     return (await this.usersService.updateUser(user)).affected ? true : false;
