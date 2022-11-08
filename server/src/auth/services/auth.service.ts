@@ -17,14 +17,12 @@ export class AuthService {
   async validateUser(userInfo: UserLoginInput): Promise<IUserToken> {
     const user = await this.usersDao.getUserByEmail(userInfo.email);
     if (!user) throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
-
     const compared: boolean = await bcrypt.compare(
       userInfo.password,
       user.password,
     );
     if (!compared)
       throw new GraphQLError('유효하지 않은 비밀번호', ERROR.INVALID_PASSWORD);
-
     const accessToken = this.jwtService.sign(
       { id: user.id },
       {
@@ -32,7 +30,6 @@ export class AuthService {
         expiresIn: '7200s',
       },
     );
-
     return { accessToken };
   }
 }

@@ -8,7 +8,6 @@ import { UserLoginInput } from '../models/user.login.model';
 import { UsersService } from '../services/users.service';
 import { IUserToken } from 'src/common/interfaces/user.interface';
 import { Token } from 'graphql';
-import { UserLogoutModel } from '../models/user.logout.model';
 
 @Resolver('user')
 export class UserResolver {
@@ -34,8 +33,7 @@ export class UserResolver {
 
   @Mutation(() => Token)
   async login(@Args('userInfo') userInfo: UserLoginInput): Promise<IUserToken> {
-    const token = await this.authService.validateUser(userInfo);
-    return token;
+    return await this.authService.validateUser(userInfo);
   }
 
   @Query(() => Boolean)
