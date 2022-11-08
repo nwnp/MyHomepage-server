@@ -87,9 +87,8 @@ export class UsersService {
     return await this.usersDao.signup(newUser);
   }
 
-  async logout(id: UserLogoutModel) {
-    const userId = id;
-    const updatedUser = await this.usersDao.deleteRefreshToken(userId);
+  async logout(id: number) {
+    const updatedUser = await this.usersDao.deleteRefreshToken(id);
     return updatedUser;
   }
 

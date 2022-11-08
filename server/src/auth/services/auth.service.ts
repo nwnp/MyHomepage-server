@@ -49,12 +49,14 @@ export class AuthService {
       },
     );
 
-    let refreshToken: string = user.refreshToken;
-    if (!refreshToken) {
+    const userWithToken = user.TokenId
+      ? await this.usersDao.joinTokenById(user.TokenId)
+      : null;
+    let refreshToken = userWithToken ? userWithToken.token.refreshToken : null;
+    if (!userWithToken) {
       refreshToken = await this.updateRefreshToken(user.id);
     } else {
-      const updatedUser = await this.usersDao.getUserByEmail(userInfo.email);
-      const verifiedToken = this.jwtService.verify(updatedUser.refreshToken, {
+      const verifiedToken = this.jwtService.verify(refreshToken, {
         secret: process.env.SECRET_KEY,
       });
       if (date >= new Date(verifiedToken.exp * 1000))

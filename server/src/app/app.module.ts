@@ -12,6 +12,7 @@ import { AppService } from './app.service';
 import { Comment } from 'src/common/databases/comment.entity';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
+import { Token } from 'src/common/databases/token.entity';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { GraphQLModule } from '@nestjs/graphql';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_SCHEMA,
-      entities: [User, Post, VisitLog, BGM, Comment],
+      entities: [User, Post, VisitLog, BGM, Comment, Token],
       synchronize: true,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
