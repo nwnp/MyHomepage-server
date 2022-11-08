@@ -3,7 +3,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -11,6 +13,7 @@ import { VisitLog } from './visit-logs.entity';
 import { Post } from './posts.entity';
 import { BGM } from './bgms.entity';
 import { Comment } from './comment.entity';
+import { Token } from './token.entity';
 
 @Entity('User')
 export class User {
@@ -68,6 +71,12 @@ export class User {
   @IsString()
   blogUrl: string;
 
+  @Column({
+    nullable: true,
+  })
+  @IsNumber()
+  TokenId: number;
+
   @CreateDateColumn()
   @IsDate()
   createdAt: Date;
@@ -75,6 +84,10 @@ export class User {
   @UpdateDateColumn()
   @IsDate()
   updatedAt: Date;
+
+  @OneToOne(() => Token, (token) => token.user)
+  @JoinColumn([{ name: 'TokenId', referencedColumnName: 'id' }])
+  token: Token;
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post;

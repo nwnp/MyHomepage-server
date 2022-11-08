@@ -6,6 +6,9 @@ import { UserUpdateModel } from '../models/user.update.model';
 import { UserCheckModel } from '../models/user.check.model';
 import { UserLoginInput } from '../models/user.login.model';
 import { UsersService } from '../services/users.service';
+import { IUserToken } from 'src/common/interfaces/user.interface';
+import { Token } from 'graphql';
+import { UserLogoutModel } from '../models/user.logout.model';
 
 @Resolver('user')
 export class UserResolver {
@@ -29,9 +32,10 @@ export class UserResolver {
     return this.usersService.searchUser(nickname);
   }
 
-  @Mutation(() => User)
-  async login(@Args('userInfo') userInfo: UserLoginInput): Promise<string> {
-    return this.authService.validateUser(userInfo);
+  @Mutation(() => Token)
+  async login(@Args('userInfo') userInfo: UserLoginInput): Promise<IUserToken> {
+    const token = await this.authService.validateUser(userInfo);
+    return token;
   }
 
   @Query(() => Boolean)
@@ -46,9 +50,8 @@ export class UserResolver {
     return this.usersService.signup(user);
   }
 
-  // TODO: return 수정
   @Mutation(() => User)
-  async updateUser(@Args('user') user: UserUpdateModel): Promise<any> {
-    return this.usersService.updateUser(user);
+  async updateUser(@Args('user') user: UserUpdateModel): Promise<boolean> {
+    return (await this.usersService.updateUser(user)).affected ? true : false;
   }
 }

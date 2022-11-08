@@ -6,11 +6,15 @@ import { User } from 'src/common/databases/users.entity';
 import { Repository, DataSource } from 'typeorm';
 import { UserSignupModel } from '../models/user.signup.model';
 import { UserUpdateModel } from '../models/user.update.model';
+import { Token } from 'src/common/databases/token.entity';
 
 @Injectable()
 export class UsersDao {
+  private readonly logger = new Logger('DB');
   constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @InjectRepository(Token)
+    private readonly tokenRepository: Repository<Token>,
     private dataSource: DataSource,
   ) {}
 
@@ -60,20 +64,19 @@ export class UsersDao {
   }
 
   async signup(userInfo: UserSignupModel) {
-    const logger = new Logger('DB');
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      logger.verbose('Start Transaction for signup');
+      this.logger.verbose('Start Transaction for signup');
       const newUser = await this.usersRepository.save(userInfo);
       return newUser;
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      logger.error('Transaction ERROR', error);
+      this.logger.error('Transaction ERROR', error);
       throw new GraphQLError('Server Error', ERROR.SIGNUP_ERROR);
     } finally {
-      logger.verbose('Released Transaction for signup');
+      this.logger.verbose('Released Transaction for signup');
       await queryRunner.release();
     }
   }
@@ -84,12 +87,11 @@ export class UsersDao {
   }
 
   async update(user: UserUpdateModel) {
-    const logger = new Logger('DB');
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      logger.verbose('Start Transaction for update user');
+      this.logger.verbose('Start Transaction for update user');
       const updatedUser = await this.dataSource
         .createQueryBuilder()
         .update(User)
@@ -102,14 +104,25 @@ export class UsersDao {
         .where('id = :id', { id: parseInt(user.id) })
         .execute();
 
-      logger.verbose('Success transaction');
+      this.logger.verbose('Success transaction');
       return updatedUser;
     } catch (error) {
-      logger.error('Transaction ERROR', error);
+      await queryRunner.rollbackTransaction();
+      this.logger.error('Transaction ERROR', error);
       throw new GraphQLError('Server Error', ERROR.UPDATE_ERROR);
     } finally {
       await queryRunner.release();
-      logger.verbose('Released Transaction for update user');
+      this.logger.verbose('Released Transaction for update user');
     }
+  }
+
+  async joinTokenById(TokenId: number) {
+    const userAndToken = await this.dataSource
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.token', 'token')
+      .where('user.TokenId = :TokenId', { TokenId })
+      .getOne();
+    return userAndToken;
   }
 }
