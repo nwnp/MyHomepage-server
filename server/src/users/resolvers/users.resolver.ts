@@ -1,3 +1,4 @@
+import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
 import { AuthService } from './../../auth/services/auth.service';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserSignupModel } from '../models/user.signup.model';
@@ -8,6 +9,7 @@ import { UserLoginInput } from '../models/user.login.model';
 import { UsersService } from '../services/users.service';
 import { IUserToken } from 'src/common/interfaces/user.interface';
 import { Token } from 'graphql';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver('user')
 export class UserResolver {
@@ -17,6 +19,7 @@ export class UserResolver {
   ) {}
 
   @Query(() => User)
+  @UseGuards(GqlAuthGuard)
   async me(@Args({ name: 'id', type: () => Int }) id: number): Promise<User> {
     return this.usersService.me(id);
   }
@@ -27,6 +30,7 @@ export class UserResolver {
   }
 
   @Query(() => User)
+  @UseGuards(GqlAuthGuard)
   async searchUser(@Args('nickname') nickname: string): Promise<User> {
     return this.usersService.searchUser(nickname);
   }
@@ -37,6 +41,7 @@ export class UserResolver {
   }
 
   @Query(() => Boolean)
+  @UseGuards(GqlAuthGuard)
   async userCheck(
     @Args('userInfo') userInfo: UserCheckModel,
   ): Promise<boolean> {
@@ -49,6 +54,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @UseGuards(GqlAuthGuard)
   async updateUser(@Args('user') user: UserUpdateModel): Promise<boolean> {
     return (await this.usersService.updateUser(user)).affected ? true : false;
   }
