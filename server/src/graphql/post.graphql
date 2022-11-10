@@ -11,11 +11,20 @@ type Query {
 }
 
 type Mutation {
-  register(post: Register!): Post!
+  registerPost(post: Register!): Post!
+  updatePost(post: Update!): Boolean!
+  deletePost(id: ID!): Boolean!
 }
 
 input Register {
   UserId: ID!
   title: String!
   content: String!
+}
+
+input Update {
+  UserId: ID!
+  PostId: ID!
+  title: String
+  content: String
 }
