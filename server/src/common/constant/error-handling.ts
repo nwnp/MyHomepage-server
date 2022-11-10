@@ -47,4 +47,16 @@ export const ERROR = {
       success: false,
     },
   },
+  GET_POST_ERROR: {
+    extensions: {
+      code: 'GET_POST_ERROR',
+      success: false,
+    },
+  },
+  REGISTER_POST_ERROR: {
+    extensions: {
+      code: 'REGISTER_POST_ERROR',
+      success: false,
+    },
+  },
 };

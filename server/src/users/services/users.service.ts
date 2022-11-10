@@ -7,7 +7,6 @@ import { User } from 'src/common/databases/users.entity';
 import * as bcrypt from 'bcrypt';
 import { UserCheckModel } from '../models/user.check.model';
 import { UserUpdateModel } from '../models/user.update.model';
-import { UserLogoutModel } from '../models/user.logout.model';
 
 @Injectable()
 export class UsersService {

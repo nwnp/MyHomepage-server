@@ -13,6 +13,7 @@ import { Comment } from 'src/common/databases/comment.entity';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Token } from 'src/common/databases/token.entity';
+import { PostsModule } from 'src/posts/posts.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { Token } from 'src/common/databases/token.entity';
       },
     }),
     UsersModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

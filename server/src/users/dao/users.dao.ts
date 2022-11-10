@@ -10,7 +10,7 @@ import { Token } from 'src/common/databases/token.entity';
 
 @Injectable()
 export class UsersDao {
-  private readonly logger = new Logger('DB');
+  private readonly logger = new Logger('USER-DB');
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     @InjectRepository(Token)
