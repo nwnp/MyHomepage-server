@@ -4,6 +4,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Post } from 'src/common/databases/posts.entity';
 import { PostRegisterModel } from '../models/post.register.model';
+import { PostUpdateModel } from '../models/post.update.model';
 
 @Resolver('post')
 export class PostResolver {
@@ -19,7 +20,21 @@ export class PostResolver {
 
   @Mutation(() => Post)
   @UseGuards(GqlAuthGuard)
-  async register(@Args('post') post: PostRegisterModel): Promise<any> {
+  async registerPost(@Args('post') post: PostRegisterModel): Promise<any> {
     return await this.postsService.register(post);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async updatePost(
+    @Args('post') post: PostUpdateModel,
+  ): Promise<boolean | Error> {
+    return await this.postsService.update(post);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async deletePost(@Args('id') id: number): Promise<boolean | Error> {
+    return await this.postsService.delete(id);
   }
 }

@@ -2,15 +2,31 @@ import { Post } from './../../common/databases/posts.entity';
 import { ERROR } from './../../common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { PostRegisterModel } from '../models/post.register.model';
+import { PostUpdateModel } from '../models/post.update.model';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PostsDao {
   private readonly logger = new Logger('POST-DB');
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
+    private readonly dataSource: DataSource,
+  ) {}
 
-  async getPostByUserId(UserId: number): Promise<Post[]> {
+  async getPostById(id: number): Promise<Post> {
+    try {
+      const post = await this.postsRepository.findOne({ where: { id } });
+      return post;
+    } catch (error) {
+      this.logger.error('POST FINDONE ERROR');
+      console.error(error);
+      return;
+    }
+  }
+
+  async getPostsByUserId(UserId: number): Promise<Post[]> {
     try {
       const posts = await this.dataSource
         .getRepository(Post)
@@ -53,6 +69,59 @@ export class PostsDao {
     } finally {
       await queryRunner.release();
       this.logger.verbose('Released Transaction for register post');
+    }
+  }
+
+  async update(post: PostUpdateModel): Promise<boolean | Error> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.logger.verbose('Start transaction to update post');
+      const updatedPost = await this.dataSource
+        .createQueryBuilder()
+        .update(Post)
+        .set({
+          title: post.title,
+          content: post.content,
+        })
+        .where('id = :id', { id: post.PostId })
+        .execute();
+      if (updatedPost.affected) return true;
+      else return false;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error('Transaction ERROR');
+      console.error(error);
+      return new GraphQLError('SERVER ERROR', ERROR.UPDATE_ERROR);
+    } finally {
+      await queryRunner.release();
+      this.logger.verbose('Released transaction to update post');
+    }
+  }
+
+  async delete(id: number): Promise<boolean | Error> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.logger.verbose('Start transaction to delete post');
+      const deletedPost = await this.dataSource
+        .createQueryBuilder()
+        .delete()
+        .from(Post)
+        .where('id = :id', { id })
+        .execute();
+      if (deletedPost.affected) return true;
+      else return false;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error('Transaction ERROR');
+      console.error(error);
+      return new GraphQLError('SERVER ERROR', ERROR.DELETE_POST);
+    } finally {
+      await queryRunner.release();
+      this.logger.verbose('Released transaction to delete post');
     }
   }
 }

@@ -59,4 +59,10 @@ export const ERROR = {
       success: false,
     },
   },
+  DELETE_POST: {
+    extensions: {
+      code: 'DELETE_POST_ERROR',
+      success: false,
+    },
+  },
 };
