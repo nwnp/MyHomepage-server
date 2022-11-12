@@ -20,6 +20,10 @@ export class Comment {
 
   @Column()
   @IsNumber()
+  commentedUserId: number;
+
+  @Column()
+  @IsNumber()
   UserId: number;
 
   @ManyToOne(() => User, (user) => user.comments)
