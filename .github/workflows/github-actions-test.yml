@@ -1,11 +1,11 @@
-name: ci pipeline - develop environment
-run-name: ${{ github.actor }} is testing CI pipeline - develop 🚀
+name: ci pipeline
+run-name: ${{ github.actor }} is testing 🚨
 on:
   push:
     branches:
-      - develop
+      - main
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Backend CI pipeline start 🚀"
+      - run: echo "TEST 🚨"
