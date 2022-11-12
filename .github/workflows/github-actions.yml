@@ -9,3 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Backend CI pipeline start 🚀"
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "second jobs"
