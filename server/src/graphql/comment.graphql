@@ -1,0 +1,10 @@
+type Comment {
+  id: ID!
+  comment: String!
+}
+
+input CommentInput {
+  comment: String!
+  UserId: ID!
+  CommentedUserId: ID!
+}
