@@ -65,4 +65,28 @@ export const ERROR = {
       success: false,
     },
   },
+  REGISTER_COMMENT_ERROR: {
+    extensions: {
+      code: 'REGISTER_COMMENT_ERROR',
+      success: false,
+    },
+  },
+  GET_COMMENTS_ERROR: {
+    extensions: {
+      code: 'GET_COMMENTS_ERROR',
+      success: false,
+    },
+  },
+  UPDATE_COMMENT_ERROR: {
+    extensions: {
+      code: 'UPDATE_COMMENT_ERROR',
+      success: false,
+    },
+  },
+  DELETE_COMMENT_ERROR: {
+    extensions: {
+      code: 'DELETE_COMMENT_ERROR',
+      success: false,
+    },
+  },
 };

@@ -27,6 +27,6 @@ export class Comment {
   UserId: number;
 
   @ManyToOne(() => User, (user) => user.comments)
-  @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
+  @JoinColumn([{ name: 'commentedUserId', referencedColumnName: 'id' }])
   user: User;
 }
