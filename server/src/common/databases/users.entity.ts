@@ -14,6 +14,7 @@ import { Post } from './posts.entity';
 import { BGM } from './bgms.entity';
 import { Comment } from './comment.entity';
 import { Token } from './token.entity';
+import { PostComment } from './post-comment.entity';
 
 @Entity('User')
 export class User {
@@ -100,4 +101,7 @@ export class User {
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment;
+
+  @OneToMany(() => PostComment, (postComment) => postComment.user)
+  postComments: PostComment;
 }
