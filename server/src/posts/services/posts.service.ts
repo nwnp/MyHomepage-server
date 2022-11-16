@@ -7,6 +7,8 @@ import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
 import { GraphQLError } from 'graphql';
 import { PostDeleteModel } from '../models/post.delete.model';
+import { PostComment } from 'src/common/databases/post-comment.entity';
+import { PostCommentsModel } from '../models/post.comments.model';
 
 @Injectable()
 export class PostsService {
@@ -14,13 +16,26 @@ export class PostsService {
     private readonly postsDao: PostsDao,
     private readonly usersDao: UsersDao,
   ) {}
-
   async getPostsByUserId(UserId: number): Promise<Post[] | Error> {
     const isExistUser = await this.usersDao.getUserById(UserId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
     return await this.postsDao.getPostsByUserId(UserId);
+  }
+
+  async getPostWithComment(
+    info: PostCommentsModel,
+  ): Promise<PostComment[] | Error> {
+    const isExistUser = await this.usersDao.getUserById(info.UserId);
+    if (!isExistUser)
+      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
+
+    const isExistPost = await this.postsDao.getPostById(info.PostId);
+    if (!isExistPost)
+      return new GraphQLError('유효하지 않은 게시글', ERROR.INVALID_POST);
+
+    return await this.postsDao.getPostWithComment(info);
   }
 
   async register(post: PostRegisterModel): Promise<any> {

@@ -6,9 +6,31 @@ type Post {
   imageUrl: String
 }
 
+type Comment {
+  id: ID!
+  post_comment: String!
+  createdAt: String
+}
+
+type User {
+  id: ID
+  email: String
+  nickname: String
+  gender: String
+  job: String
+  githubUrl: String
+  blogUrl: String
+}
+
+type PostComments {
+  post: Post
+  comments: [Comment]
+  user: User
+}
+
 type Query {
   getPostsByUserId(id: ID!): [Post]
-  getPostWithComment(id: ID!): Post!
+  getPostWithComment(info: PostCommentInfo!): PostComments!
 }
 
 type Mutation {
@@ -33,4 +55,9 @@ input Update {
 input Delete {
   id: ID!
   UserId: ID!
+}
+
+input PostCommentInfo {
+  UserId: ID!
+  PostId: ID!
 }
