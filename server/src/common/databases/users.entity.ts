@@ -13,7 +13,6 @@ import { VisitLog } from './visit-logs.entity';
 import { Post } from './posts.entity';
 import { BGM } from './bgms.entity';
 import { Comment } from './comment.entity';
-import { Token } from './token.entity';
 import { PostComment } from './post-comment.entity';
 
 @Entity('User')
@@ -86,10 +85,6 @@ export class User {
   @IsDate()
   updatedAt: Date;
 
-  @OneToOne(() => Token, (token) => token.user)
-  @JoinColumn([{ name: 'TokenId', referencedColumnName: 'id' }])
-  token: Token;
-
   @OneToMany(() => Post, (post) => post.user)
   posts: Post;
 
@@ -103,5 +98,5 @@ export class User {
   comments: Comment;
 
   @OneToMany(() => PostComment, (postComment) => postComment.user)
-  postComments: PostComment;
+  postComment: PostComment;
 }

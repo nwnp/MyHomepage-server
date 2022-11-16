@@ -13,7 +13,6 @@ import { AppService } from './app.service';
 import { Comment } from 'src/common/databases/comment.entity';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
-import { Token } from 'src/common/databases/token.entity';
 import { PostsModule } from 'src/posts/posts.module';
 import { PostComment } from 'src/common/databases/post-comment.entity';
 
@@ -27,7 +26,7 @@ import { PostComment } from 'src/common/databases/post-comment.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_SCHEMA,
-      entities: [User, Post, VisitLog, BGM, Comment, Token, PostComment],
+      entities: [User, Post, VisitLog, BGM, Comment, PostComment],
       synchronize: true,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({

@@ -8,7 +8,7 @@ type Post {
 
 type Query {
   getPostsByUserId(id: ID!): [Post]
-  getPostById(id: ID!): Post!
+  getPostWithComment(id: ID!): Post!
 }
 
 type Mutation {
