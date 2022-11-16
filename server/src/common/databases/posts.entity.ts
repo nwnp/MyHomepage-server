@@ -55,6 +55,6 @@ export class Post {
   @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
   user: User;
 
-  @OneToMany(() => PostComment, (comment) => comment.post)
-  comments: PostComment;
+  @OneToMany(() => PostComment, (postComment) => postComment.post)
+  postComment: PostComment;
 }

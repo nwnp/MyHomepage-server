@@ -1,4 +1,4 @@
-import { IsNumber, IsDate } from 'class-validator';
+import { IsNumber, IsDate, IsString } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -25,6 +25,10 @@ export class PostComment {
   @IsNumber()
   CommentedUserId: number;
 
+  @Column()
+  @IsString()
+  post_comment: string;
+
   @CreateDateColumn()
   @IsDate()
   createdAt: Date;
@@ -33,11 +37,11 @@ export class PostComment {
   @IsDate()
   updatedAt: Date;
 
-  @ManyToOne(() => Post, (post) => post.comments)
+  @ManyToOne(() => Post, (post) => post.postComment)
   @JoinColumn([{ name: 'PostId', referencedColumnName: 'id' }])
   post: Post;
 
-  @ManyToOne(() => User, (user) => user.postComments)
+  @ManyToOne(() => User, (user) => user.postComment)
   @JoinColumn([{ name: 'CommentedUserId', referencedColumnName: 'id' }])
   user: User;
 }

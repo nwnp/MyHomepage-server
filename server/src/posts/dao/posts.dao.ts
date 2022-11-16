@@ -6,12 +6,15 @@ import { DataSource, Repository } from 'typeorm';
 import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PostComment } from 'src/common/databases/post-comment.entity';
 
 @Injectable()
 export class PostsDao {
   private readonly logger = new Logger('POST-DB');
   constructor(
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
+    @InjectRepository(PostComment)
+    private readonly postCommentRepository: Repository<PostComment>,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -24,6 +27,27 @@ export class PostsDao {
       console.error(error);
       return;
     }
+  }
+
+  async getPostWithComment(
+    PostId: number,
+    CommentedUserId: number,
+  ): Promise<boolean | Error> {
+    try {
+      const post = await this.dataSource
+        .getRepository(PostComment)
+        .createQueryBuilder('postComment')
+        .leftJoinAndSelect('postComment.post', 'post')
+        .where('postComment.PostId = :PostId', { PostId })
+        .leftJoinAndSelect('postComment.user', 'user')
+        .where('postComment.CommentedUserId = :CommentedUserId', {
+          CommentedUserId,
+        })
+        .andWhere('post.id = :id', { PostId })
+        .getMany();
+      if (!post) return false;
+      else return true;
+    } catch (error) {}
   }
 
   async getPostsByUserId(UserId: number): Promise<Post[]> {

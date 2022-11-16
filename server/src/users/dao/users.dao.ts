@@ -6,15 +6,12 @@ import { User } from 'src/common/databases/users.entity';
 import { Repository, DataSource } from 'typeorm';
 import { UserSignupModel } from '../models/user.signup.model';
 import { UserUpdateModel } from '../models/user.update.model';
-import { Token } from 'src/common/databases/token.entity';
 
 @Injectable()
 export class UsersDao {
   private readonly logger = new Logger('USER-DB');
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
-    @InjectRepository(Token)
-    private readonly tokenRepository: Repository<Token>,
     private dataSource: DataSource,
   ) {}
 
