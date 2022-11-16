@@ -14,7 +14,7 @@ export class PostResolver {
   @UseGuards(GqlAuthGuard)
   async getPostsByUserId(
     @Args({ name: 'id', type: () => String }) id: string,
-  ): Promise<Post[]> {
+  ): Promise<Post[] | Error> {
     return await this.postsService.getPostsByUserId(parseInt(id));
   }
 
