@@ -5,6 +5,7 @@ import { UseGuards } from '@nestjs/common';
 import { Post } from 'src/common/databases/posts.entity';
 import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
+import { PostDeleteModel } from '../models/post.delete.model';
 
 @Resolver('post')
 export class PostResolver {
@@ -34,7 +35,9 @@ export class PostResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
-  async deletePost(@Args('id') id: number): Promise<boolean | Error> {
-    return await this.postsService.delete(id);
+  async deletePost(
+    @Args('post') post: PostDeleteModel,
+  ): Promise<boolean | Error> {
+    return await this.postsService.delete(post);
   }
 }

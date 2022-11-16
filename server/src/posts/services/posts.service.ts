@@ -6,6 +6,7 @@ import { PostsDao } from '../dao/posts.dao';
 import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
 import { GraphQLError } from 'graphql';
+import { PostDeleteModel } from '../models/post.delete.model';
 
 @Injectable()
 export class PostsService {
@@ -51,14 +52,14 @@ export class PostsService {
     return await this.postsDao.update(post);
   }
 
-  async delete(id: number): Promise<boolean | Error> {
-    const isExistUser = await this.usersDao.getUserById(id);
+  async delete(post: PostDeleteModel): Promise<boolean | Error> {
+    const isExistUser = await this.usersDao.getUserById(post.UserId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
-    const isExistPost = await this.postsDao.getPostById(id);
+    const isExistPost = await this.postsDao.getPostById(post.id);
     if (!isExistPost)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
-    return await this.postsDao.delete(id);
+    return await this.postsDao.delete(post.id);
   }
 }
