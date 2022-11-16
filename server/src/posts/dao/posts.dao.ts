@@ -7,6 +7,7 @@ import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostComment } from 'src/common/databases/post-comment.entity';
+import { PostCommentsModel } from '../models/post.comments.model';
 
 @Injectable()
 export class PostsDao {
@@ -30,24 +31,24 @@ export class PostsDao {
   }
 
   async getPostWithComment(
-    PostId: number,
-    CommentedUserId: number,
-  ): Promise<boolean | Error> {
+    info: PostCommentsModel,
+  ): Promise<PostComment[] | Error> {
     try {
       const post = await this.dataSource
         .getRepository(PostComment)
         .createQueryBuilder('postComment')
         .leftJoinAndSelect('postComment.post', 'post')
-        .where('postComment.PostId = :PostId', { PostId })
         .leftJoinAndSelect('postComment.user', 'user')
-        .where('postComment.CommentedUserId = :CommentedUserId', {
-          CommentedUserId,
-        })
-        .andWhere('post.id = :id', { PostId })
+        .where('postComment.PostId = :id', { id: ~~info.PostId })
         .getMany();
-      if (!post) return false;
-      else return true;
-    } catch (error) {}
+      console.log(post);
+
+      return post;
+    } catch (error) {
+      this.logger.error('GetPostWithComment ERROR');
+      console.error(error);
+      return new GraphQLError('GET POSTS ERROR', ERROR.GET_POST_COMMENTS_ERROR);
+    }
   }
 
   async getPostsByUserId(UserId: number): Promise<Post[]> {

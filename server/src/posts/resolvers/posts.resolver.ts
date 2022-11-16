@@ -6,6 +6,8 @@ import { Post } from 'src/common/databases/posts.entity';
 import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
 import { PostDeleteModel } from '../models/post.delete.model';
+import { PostComment } from 'src/common/databases/post-comment.entity';
+import { PostCommentsModel } from '../models/post.comments.model';
 
 @Resolver('post')
 export class PostResolver {
@@ -17,6 +19,14 @@ export class PostResolver {
     @Args({ name: 'id', type: () => String }) id: string,
   ): Promise<Post[] | Error> {
     return await this.postsService.getPostsByUserId(parseInt(id));
+  }
+
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async getPostWithComment(
+    @Args('info') info: PostCommentsModel,
+  ): Promise<PostComment[] | Error> {
+    return await this.postsService.getPostWithComment(info);
   }
 
   @Mutation(() => Post)

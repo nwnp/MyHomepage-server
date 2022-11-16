@@ -3,9 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -70,12 +68,6 @@ export class User {
   })
   @IsString()
   blogUrl: string;
-
-  @Column({
-    nullable: true,
-  })
-  @IsNumber()
-  TokenId: number;
 
   @CreateDateColumn()
   @IsDate()
