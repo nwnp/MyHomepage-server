@@ -6,12 +6,6 @@ type Post {
   imageUrl: String
 }
 
-type Comment {
-  id: ID!
-  post_comment: String!
-  createdAt: String
-}
-
 type User {
   id: ID
   email: String
@@ -22,15 +16,18 @@ type User {
   blogUrl: String
 }
 
-type PostComments {
-  post: Post
-  comments: [Comment]
-  user: User
+type PostComment {
+  id: ID!
+  post_comment: String!
+  commentedUserId: ID!
+  createdAt: String!
+  user: User!
+  post: Post!
 }
 
 type Query {
   getPostsByUserId(id: ID!): [Post]
-  getPostWithComment(info: PostCommentInfo!): PostComments!
+  getPostWithComment(info: PostCommentInfo!): [PostComment]!
 }
 
 type Mutation {

@@ -41,8 +41,6 @@ export class PostsDao {
         .leftJoinAndSelect('postComment.user', 'user')
         .where('postComment.PostId = :id', { id: ~~info.PostId })
         .getMany();
-      console.log(post);
-
       return post;
     } catch (error) {
       this.logger.error('GetPostWithComment ERROR');
