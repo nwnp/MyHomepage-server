@@ -19,7 +19,7 @@ type User {
 type PostComment {
   id: ID!
   post_comment: String!
-  commentedUserId: ID!
+  CommentedUserId: ID!
   createdAt: String!
   user: User!
   post: Post!
@@ -34,6 +34,9 @@ type Mutation {
   registerPost(post: Register!): Post!
   updatePost(post: Update!): Boolean!
   deletePost(post: Delete!): Boolean!
+  registerPostComment(post: PostCommentEditOrRegister!): Boolean!
+  updatePostComment(post: PostCommentInfo!): Boolean!
+  deletePostComment(post: PostCommentDelete!): Boolean!
 }
 
 input Register {
@@ -57,4 +60,16 @@ input Delete {
 input PostCommentInfo {
   UserId: ID!
   PostId: ID!
+}
+
+input PostCommentEditOrRegister {
+  UserId: ID!
+  PostId: ID!
+  comment: String!
+}
+
+input PostCommentDelete {
+  UserId: ID!
+  PostId: ID!
+  commentId: ID!
 }

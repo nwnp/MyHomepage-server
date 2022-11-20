@@ -8,6 +8,8 @@ import { PostUpdateModel } from '../models/post.update.model';
 import { PostDeleteModel } from '../models/post.delete.model';
 import { PostComment } from 'src/common/databases/post-comment.entity';
 import { PostCommentsModel } from '../models/post.comments.model';
+import { PostCommentRegisterModel } from '../models/post-comment.register.model';
+import { PostCommentDeleteModel } from '../models/post-comment.delete.model';
 
 @Resolver('post')
 export class PostResolver {
@@ -49,5 +51,19 @@ export class PostResolver {
     @Args('post') post: PostDeleteModel,
   ): Promise<boolean | Error> {
     return await this.postsService.delete(post);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async registerPostComment(@Args('post') post: PostCommentRegisterModel) {
+    return await this.postsService.registerPostComment(post);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async deletePostComment(
+    @Args('post') post: PostCommentDeleteModel,
+  ): Promise<boolean | Error> {
+    return await this.postsService.deletePostComment(post);
   }
 }

@@ -9,6 +9,8 @@ import { GraphQLError } from 'graphql';
 import { PostDeleteModel } from '../models/post.delete.model';
 import { PostComment } from 'src/common/databases/post-comment.entity';
 import { PostCommentsModel } from '../models/post.comments.model';
+import { PostCommentRegisterModel } from '../models/post-comment.register.model';
+import { PostCommentDeleteModel } from '../models/post-comment.delete.model';
 
 @Injectable()
 export class PostsService {
@@ -36,6 +38,18 @@ export class PostsService {
       return new GraphQLError('유효하지 않은 게시글', ERROR.INVALID_POST);
 
     return await this.postsDao.getPostWithComment(info);
+  }
+
+  async registerPostComment(info: PostCommentRegisterModel) {
+    const isExistUser = await this.usersDao.getUserById(info.UserId);
+    if (!isExistUser)
+      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
+
+    const isExistPost = await this.postsDao.getPostById(info.PostId);
+    if (!isExistPost)
+      return new GraphQLError('유효하지 않은 게시글', ERROR.INVALID_POST);
+
+    return await this.postsDao.registerPostComment(info);
   }
 
   async register(post: PostRegisterModel): Promise<any> {
@@ -76,5 +90,28 @@ export class PostsService {
     if (!isExistPost)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
     return await this.postsDao.delete(post.id);
+  }
+
+  async deletePostComment(
+    post: PostCommentDeleteModel,
+  ): Promise<boolean | Error> {
+    const isExistUser = await this.usersDao.getUserById(post.UserId);
+    if (!isExistUser)
+      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
+
+    const isExistPost = await this.postsDao.getPostById(post.PostId);
+    if (!isExistPost)
+      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
+
+    const isPostComment = await this.postsDao.getPostCommentById(
+      post.commentId,
+    );
+    if (!isPostComment)
+      return new GraphQLError('유효하지 않은 댓글', ERROR.GET_POST_COMMENT);
+
+    if (isPostComment.CommentedUserId != post.UserId)
+      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
+
+    return await this.postsDao.deletePostComment(post.commentId);
   }
 }

@@ -8,6 +8,8 @@ import { PostUpdateModel } from '../models/post.update.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostComment } from 'src/common/databases/post-comment.entity';
 import { PostCommentsModel } from '../models/post.comments.model';
+import { PostCommentUpdateModel } from '../models/post-comment.update.model';
+import { PostCommentRegisterModel } from '../models/post-comment.register.model';
 
 @Injectable()
 export class PostsDao {
@@ -30,6 +32,18 @@ export class PostsDao {
     }
   }
 
+  async getPostCommentById(id: number): Promise<PostComment> {
+    try {
+      const postComment = await this.postCommentRepository.findOne({
+        where: { id },
+      });
+      return postComment;
+    } catch (error) {
+      this.logger.error('POST-COMMENT FINDONE ERROR');
+      console.error(error);
+    }
+  }
+
   async getPostWithComment(
     info: PostCommentsModel,
   ): Promise<PostComment[] | Error> {
@@ -49,6 +63,95 @@ export class PostsDao {
     }
   }
 
+  async updatePostComment(
+    info: PostCommentUpdateModel,
+  ): Promise<boolean | Error> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.logger.verbose('Start transaction to update post-comment');
+      const post = await this.dataSource
+        .createQueryBuilder()
+        .update(PostComment)
+        .set({
+          post_comment: info.post_comment,
+        })
+        .where('id = :id', { id: info.id })
+        .execute();
+      this.logger.verbose('Success to update post-comment');
+      if (post.affected) return true;
+      else return false;
+    } catch (error) {
+      this.logger.error('TRANSACTION ERROR');
+      console.error(error);
+      return new GraphQLError('SERVER ERROR', ERROR.UPDATE_POST_COMMENT_ERROR);
+    } finally {
+      await queryRunner.release();
+      this.logger.verbose('Release transaction to update post-comment');
+    }
+  }
+
+  async registerPostComment(
+    info: PostCommentRegisterModel,
+  ): Promise<boolean | Error> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.logger.verbose('Start Transaction to register post-comment');
+      const newComment = await this.dataSource
+        .createQueryBuilder()
+        .insert()
+        .into(PostComment)
+        .values({
+          post_comment: info.comment,
+          CommentedUserId: info.UserId,
+          PostId: info.PostId,
+        })
+        .execute();
+      this.logger.verbose('Success to register post-comment');
+      if (newComment.generatedMaps.length) return true;
+      return false;
+    } catch (error) {
+      this.logger.error('Transaction ERROR');
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+      this.logger.verbose('Rollback Transaction');
+      return new GraphQLError('SERVER ERROR', ERROR.REGISTER_POST_COMMENT);
+    } finally {
+      await queryRunner.release();
+      this.logger.verbose('Released Transaction to register post-comment');
+    }
+  }
+
+  async deletePostComment(commentId: number): Promise<boolean | Error> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.logger.verbose('Start transaction to delete post-comment');
+      const deletedPostComment = await this.dataSource
+        .createQueryBuilder()
+        .delete()
+        .from(PostComment)
+        .where('id = :id', { id: commentId })
+        .execute();
+      this.logger.verbose('Success transaction to delete post-comment');
+      if (deletedPostComment.affected) return true;
+      else return false;
+    } catch (error) {
+      this.logger.error('Transaction ERROR');
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+      this.logger.verbose('Rollback Transaction');
+      return new GraphQLError('SERVER ERROR', ERROR.DELETE_POST_COMMENT);
+    } finally {
+      await queryRunner.release();
+      this.logger.verbose('Release Transaction to delete post-comment');
+    }
+  }
+
   async getPostsByUserId(UserId: number): Promise<Post[]> {
     try {
       const posts = await this.dataSource
@@ -61,6 +164,7 @@ export class PostsDao {
       this.logger.verbose('Get posts success');
       return posts;
     } catch (error) {
+      this.logger.error('Transaction ERROR');
       console.error(error);
       throw new GraphQLError('SERVER ERROR', ERROR.GET_POST_ERROR);
     }

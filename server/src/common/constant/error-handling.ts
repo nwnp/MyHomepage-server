@@ -101,4 +101,28 @@ export const ERROR = {
       success: false,
     },
   },
+  UPDATE_POST_COMMENT_ERROR: {
+    extensions: {
+      code: 'POST-COMMENT_UPDATE_ERROR',
+      success: false,
+    },
+  },
+  REGISTER_POST_COMMENT: {
+    extensions: {
+      code: 'POST-COMMENT_REGISTER_ERROR',
+      success: false,
+    },
+  },
+  DELETE_POST_COMMENT: {
+    extensions: {
+      code: 'POST-COMMENT_DELETE_ERROR',
+      success: false,
+    },
+  },
+  GET_POST_COMMENT: {
+    extensions: {
+      code: 'POST-COMMENT_GET_ERROR',
+      success: false,
+    },
+  },
 };
