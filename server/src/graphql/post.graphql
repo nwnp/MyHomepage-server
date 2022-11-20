@@ -6,12 +6,6 @@ type Post {
   imageUrl: String
 }
 
-type Comment {
-  id: ID!
-  post_comment: String!
-  createdAt: String
-}
-
 type User {
   id: ID
   email: String
@@ -22,21 +16,27 @@ type User {
   blogUrl: String
 }
 
-type PostComments {
-  post: Post
-  comments: [Comment]
-  user: User
+type PostComment {
+  id: ID!
+  post_comment: String!
+  CommentedUserId: ID!
+  createdAt: String!
+  user: User!
+  post: Post!
 }
 
 type Query {
   getPostsByUserId(id: ID!): [Post]
-  getPostWithComment(info: PostCommentInfo!): PostComments!
+  getPostWithComment(info: PostCommentInfo!): [PostComment]!
 }
 
 type Mutation {
   registerPost(post: Register!): Post!
   updatePost(post: Update!): Boolean!
   deletePost(post: Delete!): Boolean!
+  registerPostComment(post: PostCommentEditOrRegister!): Boolean!
+  updatePostComment(post: PostCommentInfo!): Boolean!
+  deletePostComment(post: PostCommentDelete!): Boolean!
 }
 
 input Register {
@@ -60,4 +60,16 @@ input Delete {
 input PostCommentInfo {
   UserId: ID!
   PostId: ID!
+}
+
+input PostCommentEditOrRegister {
+  UserId: ID!
+  PostId: ID!
+  comment: String!
+}
+
+input PostCommentDelete {
+  UserId: ID!
+  PostId: ID!
+  commentId: ID!
 }
