@@ -80,8 +80,10 @@ export class PostsDao {
         .where('id = :id', { id: info.id })
         .execute();
       this.logger.verbose('Success to update post-comment');
-      if (post.affected) return true;
-      else return false;
+      if (post.affected) {
+        await queryRunner.commitTransaction();
+        return true;
+      } else return false;
     } catch (error) {
       this.logger.error('TRANSACTION ERROR');
       console.error(error);
@@ -111,7 +113,10 @@ export class PostsDao {
         })
         .execute();
       this.logger.verbose('Success to register post-comment');
-      if (newComment.generatedMaps.length) return true;
+      if (newComment.generatedMaps.length) {
+        await queryRunner.commitTransaction();
+        return true;
+      }
       return false;
     } catch (error) {
       this.logger.error('Transaction ERROR');
@@ -138,8 +143,10 @@ export class PostsDao {
         .where('id = :id', { id: commentId })
         .execute();
       this.logger.verbose('Success transaction to delete post-comment');
-      if (deletedPostComment.affected) return true;
-      else return false;
+      if (deletedPostComment.affected) {
+        await queryRunner.commitTransaction();
+        return true;
+      } else return false;
     } catch (error) {
       this.logger.error('Transaction ERROR');
       console.error(error);
@@ -187,6 +194,7 @@ export class PostsDao {
         })
         .execute();
       this.logger.verbose('Success transaction');
+      await queryRunner.commitTransaction();
       return newPost.generatedMaps[0];
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -214,8 +222,10 @@ export class PostsDao {
         })
         .where('id = :id', { id: post.PostId })
         .execute();
-      if (updatedPost.affected) return true;
-      else return false;
+      if (updatedPost.affected) {
+        await queryRunner.commitTransaction();
+        return true;
+      } else return false;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       this.logger.error('Transaction ERROR');
@@ -239,8 +249,10 @@ export class PostsDao {
         .from(Post)
         .where('id = :id', { id })
         .execute();
-      if (deletedPost.affected) return true;
-      else return false;
+      if (deletedPost.affected) {
+        await queryRunner.commitTransaction();
+        return true;
+      } else return false;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       this.logger.error('Transaction ERROR');
