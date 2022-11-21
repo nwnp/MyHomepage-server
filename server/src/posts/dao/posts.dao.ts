@@ -75,7 +75,7 @@ export class PostsDao {
         .createQueryBuilder()
         .update(PostComment)
         .set({
-          post_comment: info.post_comment,
+          post_comment: info.comment,
         })
         .where('id = :id', { id: info.id })
         .execute();

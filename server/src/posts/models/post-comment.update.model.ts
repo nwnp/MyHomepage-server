@@ -12,5 +12,5 @@ export class PostCommentUpdateModel {
   PostId: number;
 
   @Field(() => String)
-  post_comment: string;
+  comment: string;
 }

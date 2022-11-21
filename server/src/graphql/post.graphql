@@ -34,8 +34,8 @@ type Mutation {
   registerPost(post: Register!): Post!
   updatePost(post: Update!): Boolean!
   deletePost(post: Delete!): Boolean!
-  registerPostComment(post: PostCommentEditOrRegister!): Boolean!
-  updatePostComment(post: PostCommentInfo!): Boolean!
+  registerPostComment(post: PostCommentRegister!): Boolean!
+  updatePostComment(post: PostCommentUpdate!): Boolean!
   deletePostComment(post: PostCommentDelete!): Boolean!
 }
 
@@ -62,7 +62,14 @@ input PostCommentInfo {
   PostId: ID!
 }
 
-input PostCommentEditOrRegister {
+input PostCommentRegister {
+  UserId: ID!
+  PostId: ID!
+  comment: String!
+}
+
+input PostCommentUpdate {
+  id: ID!
   UserId: ID!
   PostId: ID!
   comment: String!
