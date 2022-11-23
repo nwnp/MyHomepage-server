@@ -28,6 +28,7 @@ type PostComment {
 type Query {
   getPostsByUserId(id: ID!): [Post]
   getPostWithComment(info: PostCommentInfo!): [PostComment]!
+  getLimitedPosts(post: LimitedPosts!): [Post]
 }
 
 type Mutation {
@@ -79,4 +80,9 @@ input PostCommentDelete {
   UserId: ID!
   PostId: ID!
   commentId: ID!
+}
+
+input LimitedPosts {
+  UserId: ID!
+  count: Int!
 }

@@ -10,6 +10,7 @@ import { PostComment } from 'src/common/databases/post-comment.entity';
 import { PostCommentsModel } from '../models/post.comments.model';
 import { PostCommentUpdateModel } from '../models/post-comment.update.model';
 import { PostCommentRegisterModel } from '../models/post-comment.register.model';
+import { LimitedPostsModel } from '../models/limited.post.model';
 
 @Injectable()
 export class PostsDao {
@@ -60,6 +61,21 @@ export class PostsDao {
       this.logger.error('GetPostWithComment ERROR');
       console.error(error);
       return new GraphQLError('GET POSTS ERROR', ERROR.GET_POST_COMMENTS_ERROR);
+    }
+  }
+
+  async getLimitedPosts(post: LimitedPostsModel): Promise<any> {
+    try {
+      const posts = await this.postsRepository.find({
+        where: { UserId: post.UserId },
+        order: {
+          id: 'DESC',
+        },
+        take: post.count,
+      });
+      return posts;
+    } catch (error) {
+      console.error(error);
     }
   }
 

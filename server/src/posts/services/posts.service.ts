@@ -12,6 +12,7 @@ import { PostCommentsModel } from '../models/post.comments.model';
 import { PostCommentRegisterModel } from '../models/post-comment.register.model';
 import { PostCommentDeleteModel } from '../models/post-comment.delete.model';
 import { PostCommentUpdateModel } from '../models/post-comment.update.model';
+import { LimitedPostsModel } from '../models/limited.post.model';
 
 @Injectable()
 export class PostsService {
@@ -39,6 +40,10 @@ export class PostsService {
       return new GraphQLError('유효하지 않은 게시글', ERROR.INVALID_POST);
 
     return await this.postsDao.getPostWithComment(info);
+  }
+
+  async getLimitedPosts(post: LimitedPostsModel) {
+    return await this.postsDao.getLimitedPosts(post);
   }
 
   async registerPostComment(info: PostCommentRegisterModel) {

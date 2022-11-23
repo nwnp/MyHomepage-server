@@ -11,6 +11,7 @@ import { PostCommentsModel } from '../models/post.comments.model';
 import { PostCommentRegisterModel } from '../models/post-comment.register.model';
 import { PostCommentDeleteModel } from '../models/post-comment.delete.model';
 import { PostCommentUpdateModel } from '../models/post-comment.update.model';
+import { LimitedPostsModel } from '../models/limited.post.model';
 
 @Resolver('post')
 export class PostResolver {
@@ -30,6 +31,12 @@ export class PostResolver {
     @Args('info') info: PostCommentsModel,
   ): Promise<PostComment[] | Error> {
     return await this.postsService.getPostWithComment(info);
+  }
+
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async getLimitedPosts(@Args('post') post: LimitedPostsModel) {
+    return await this.postsService.getLimitedPosts(post);
   }
 
   @Mutation(() => Post)
