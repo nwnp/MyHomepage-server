@@ -4,6 +4,7 @@ type Post {
   content: String!
   createdAt: String
   imageUrl: String
+  user: User
 }
 
 type User {

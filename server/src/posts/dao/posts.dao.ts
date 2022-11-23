@@ -64,15 +64,16 @@ export class PostsDao {
     }
   }
 
-  async getLimitedPosts(post: LimitedPostsModel): Promise<any> {
+  async getLimitedPosts(post: LimitedPostsModel): Promise<Post[]> {
     try {
-      const posts = await this.postsRepository.find({
-        where: { UserId: post.UserId },
-        order: {
-          id: 'DESC',
-        },
-        take: post.count,
-      });
+      const posts = await this.dataSource
+        .getRepository(Post)
+        .createQueryBuilder('post')
+        .leftJoinAndSelect('post.user', 'user')
+        .where('post.UserId = :UserId', { UserId: post.UserId })
+        .orderBy('post.id', 'DESC')
+        .limit(post.count)
+        .getMany();
       return posts;
     } catch (error) {
       console.error(error);
