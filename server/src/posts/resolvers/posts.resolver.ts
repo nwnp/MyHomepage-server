@@ -12,6 +12,8 @@ import { PostCommentRegisterModel } from '../models/post-comment.register.model'
 import { PostCommentDeleteModel } from '../models/post-comment.delete.model';
 import { PostCommentUpdateModel } from '../models/post-comment.update.model';
 import { LimitedPostsModel } from '../models/limited.post.model';
+import { CurrentUser } from 'src/common/functions/current.user';
+import { User } from 'src/common/databases/users.entity';
 
 @Resolver('post')
 export class PostResolver {
@@ -35,7 +37,10 @@ export class PostResolver {
 
   @Query()
   @UseGuards(GqlAuthGuard)
-  async getLimitedPosts(@Args('post') post: LimitedPostsModel) {
+  async getLimitedPosts(
+    @Args('post') post: LimitedPostsModel,
+    @CurrentUser() user: User,
+  ) {
     return await this.postsService.getLimitedPosts(post);
   }
 

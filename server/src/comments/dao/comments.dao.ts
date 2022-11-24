@@ -30,10 +30,12 @@ export class CommentsDao {
         .values({
           comment: info.comment,
           UserId: info.UserId,
-          commentedUserId: info.commentedUserId,
+          CommentedUserId: info.commentedUserId,
         })
         .execute();
       const result = newComment.raw.affectedRows ? true : false;
+      await queryRunner.commitTransaction();
+      this.logger.verbose('Success to register comment');
       return result;
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -55,6 +57,8 @@ export class CommentsDao {
         .where('comment.UserId = :id', { id: UserId })
         .orderBy('comment.id', 'DESC')
         .getMany();
+      if (!commentsWithUser)
+        return new GraphQLError('SERVER ERROR', ERROR.GET_COMMENTS_ERROR);
       return commentsWithUser;
     } catch (error) {
       this.logger.error('COMMENTS FINDALL ERROR');
@@ -75,6 +79,8 @@ export class CommentsDao {
         .set({ comment: comment.comment })
         .where('id = :id', { id: comment.id })
         .execute();
+      await queryRunner.commitTransaction();
+      this.logger.verbose('Success to update comment');
       return newComment.affected ? true : false;
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -99,6 +105,9 @@ export class CommentsDao {
         .from(Comment)
         .where('id = :id', { id: comment.id })
         .execute();
+
+      await queryRunner.commitTransaction();
+      this.logger.verbose('Success to delete comment');
       return result.affected ? true : false;
     } catch (error) {
       await queryRunner.rollbackTransaction();

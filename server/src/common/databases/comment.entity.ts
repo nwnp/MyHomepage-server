@@ -20,13 +20,13 @@ export class Comment {
 
   @Column()
   @IsNumber()
-  commentedUserId: number;
+  CommentedUserId: number;
 
   @Column()
   @IsNumber()
   UserId: number;
 
   @ManyToOne(() => User, (user) => user.comments)
-  @JoinColumn([{ name: 'commentedUserId', referencedColumnName: 'id' }])
+  @JoinColumn([{ name: 'CommentedUserId', referencedColumnName: 'id' }])
   user: User;
 }
