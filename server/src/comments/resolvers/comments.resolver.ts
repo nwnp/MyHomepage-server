@@ -1,4 +1,3 @@
-import { CommentDeleteModel } from './../models/comment.delete.model';
 import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
 import { CommentsService } from './../services/comments.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
@@ -6,6 +5,8 @@ import { UseGuards } from '@nestjs/common';
 import { CommentRegisterModel } from '../models/comment.register.model';
 import { Comment } from 'src/common/databases/comment.entity';
 import { CommentUpdateModel } from '../models/comment.update.model';
+import { CurrentUser } from 'src/common/functions/current.user';
+import { User } from 'src/common/databases/users.entity';
 
 @Resolver()
 export class CommentsResolver {
@@ -15,29 +16,32 @@ export class CommentsResolver {
   @UseGuards(GqlAuthGuard)
   async registerComment(
     @Args('commentInfo') commentInfo: CommentRegisterModel,
+    @CurrentUser() user: User,
   ) {
-    return await this.commentsService.registerComment(commentInfo);
+    return await this.commentsService.registerComment(commentInfo, user.id);
   }
 
   @Query(() => [Comment])
   @UseGuards(GqlAuthGuard)
-  async getComments(@Args('id') id: number): Promise<Comment[] | Error> {
-    return await this.commentsService.getComments(id);
+  async getComments(@CurrentUser() user: User): Promise<Comment[] | Error> {
+    return await this.commentsService.getComments(user.id);
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async updateComment(
     @Args('commentInfo') commentInfo: CommentUpdateModel,
+    @CurrentUser() user: User,
   ): Promise<boolean | Error> {
-    return await this.commentsService.updateComment(commentInfo);
+    return await this.commentsService.updateComment(commentInfo, user.id);
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async deleteComment(
-    @Args('commentInfo') commentInfo: CommentDeleteModel,
+    @Args('commentId') commentId: number,
+    @CurrentUser() user: User,
   ): Promise<boolean | Error> {
-    return await this.commentsService.deleteComment(commentInfo);
+    return await this.commentsService.deleteComment(commentId, user.id);
   }
 }

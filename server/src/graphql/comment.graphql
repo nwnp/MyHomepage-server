@@ -20,26 +20,19 @@ type Comment {
 input CommentInput {
   comment: String!
   UserId: ID!
-  commentedUserId: ID!
 }
 
 input CommentUpdate {
   comment: String!
   id: ID!
-  commentedUserId: ID!
-}
-
-input CommentDelete {
-  id: ID!
-  commentedUserId: ID!
 }
 
 type Query {
-  getComments(id: ID!): [Comment]
+  getComments: [Comment]
 }
 
 type Mutation {
   registerComment(commentInfo: CommentInput!): Boolean!
   updateComment(commentInfo: CommentUpdate!): Boolean!
-  deleteComment(commentInfo: CommentDelete!): Boolean!
+  deleteComment(commentId: ID!): Boolean!
 }
