@@ -35,7 +35,10 @@ import { PostComment } from 'src/common/databases/post-comment.entity';
       playground: true,
       typePaths: ['./**/*.graphql'],
       cors: {
-        origin: 'http://localhost:8081',
+        origin: [
+          'http://localhost:8081',
+          'http://my-sideproject.s3-website.ap-northeast-2.amazonaws.com',
+        ],
         credentials: true,
       },
     }),
