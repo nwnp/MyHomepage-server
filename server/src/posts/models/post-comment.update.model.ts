@@ -6,9 +6,6 @@ export class PostCommentUpdateModel {
   id: number;
 
   @Field(() => Int)
-  UserId: number;
-
-  @Field(() => Int)
   PostId: number;
 
   @Field(() => String)

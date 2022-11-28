@@ -7,10 +7,8 @@ import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostComment } from 'src/common/databases/post-comment.entity';
-import { PostCommentsModel } from '../models/post.comments.model';
 import { PostCommentUpdateModel } from '../models/post-comment.update.model';
 import { PostCommentRegisterModel } from '../models/post-comment.register.model';
-import { LimitedPostsModel } from '../models/limited.post.model';
 
 @Injectable()
 export class PostsDao {
@@ -45,16 +43,14 @@ export class PostsDao {
     }
   }
 
-  async getPostWithComment(
-    info: PostCommentsModel,
-  ): Promise<PostComment[] | Error> {
+  async getPostWithComment(postId: number): Promise<PostComment[] | Error> {
     try {
       const post = await this.dataSource
         .getRepository(PostComment)
         .createQueryBuilder('postComment')
         .leftJoinAndSelect('postComment.post', 'post')
         .leftJoinAndSelect('postComment.user', 'user')
-        .where('postComment.PostId = :id', { id: ~~info.PostId })
+        .where('postComment.PostId = :id', { id: postId })
         .getMany();
       return post;
     } catch (error) {
@@ -64,15 +60,15 @@ export class PostsDao {
     }
   }
 
-  async getLimitedPosts(post: LimitedPostsModel): Promise<Post[]> {
+  async getLimitedPosts(count: number, userId: number): Promise<Post[]> {
     try {
       const posts = await this.dataSource
         .getRepository(Post)
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.user', 'user')
-        .where('post.UserId = :UserId', { UserId: post.UserId })
+        .where('post.UserId = :UserId', { UserId: userId })
         .orderBy('post.id', 'DESC')
-        .limit(post.count)
+        .limit(count)
         .getMany();
       return posts;
     } catch (error) {
@@ -113,6 +109,7 @@ export class PostsDao {
 
   async registerPostComment(
     info: PostCommentRegisterModel,
+    userId: number,
   ): Promise<boolean | Error> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -125,7 +122,7 @@ export class PostsDao {
         .into(PostComment)
         .values({
           post_comment: info.comment,
-          CommentedUserId: info.UserId,
+          CommentedUserId: userId,
           PostId: info.PostId,
         })
         .execute();
@@ -194,7 +191,7 @@ export class PostsDao {
     }
   }
 
-  async register(post: PostRegisterModel): Promise<any> {
+  async registerPost(post: PostRegisterModel, userId: number): Promise<any> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -205,7 +202,7 @@ export class PostsDao {
         .insert()
         .into(Post)
         .values({
-          UserId: post.UserId,
+          UserId: userId,
           title: post.title,
           content: post.content,
         })
@@ -224,7 +221,7 @@ export class PostsDao {
     }
   }
 
-  async update(post: PostUpdateModel): Promise<boolean | Error> {
+  async updatePost(post: PostUpdateModel): Promise<boolean | Error> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -254,7 +251,7 @@ export class PostsDao {
     }
   }
 
-  async delete(id: number): Promise<boolean | Error> {
+  async deletePost(id: number): Promise<boolean | Error> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();

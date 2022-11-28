@@ -12,8 +12,5 @@ export class PostUpdateModel {
   content: string;
 
   @Field(() => Int)
-  UserId: number;
-
-  @Field(() => Int)
   PostId: number;
 }

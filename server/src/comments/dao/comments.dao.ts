@@ -6,7 +6,6 @@ import { Repository, DataSource } from 'typeorm';
 import { CommentRegisterModel } from '../models/comment.register.model';
 import { ERROR } from 'src/common/constant/error-handling';
 import { CommentUpdateModel } from '../models/comment.update.model';
-import { CommentDeleteModel } from '../models/comment.delete.model';
 
 @Injectable()
 export class CommentsDao {
@@ -17,7 +16,24 @@ export class CommentsDao {
     private readonly dataSource: DataSource,
   ) {}
 
-  async registerComment(info: CommentRegisterModel): Promise<boolean | Error> {
+  async getCommentById(commentId: number): Promise<Comment> {
+    try {
+      const comment = await this.dataSource
+        .getRepository(Comment)
+        .createQueryBuilder('comment')
+        .where('id = :id', { id: commentId })
+        .getOne();
+      return comment;
+    } catch (error) {
+      this.logger.error('SERVER ERROR');
+      console.log(error);
+    }
+  }
+
+  async registerComment(
+    info: CommentRegisterModel,
+    commentedUserId: number,
+  ): Promise<boolean | Error> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -30,10 +46,12 @@ export class CommentsDao {
         .values({
           comment: info.comment,
           UserId: info.UserId,
-          commentedUserId: info.commentedUserId,
+          CommentedUserId: commentedUserId,
         })
         .execute();
       const result = newComment.raw.affectedRows ? true : false;
+      await queryRunner.commitTransaction();
+      this.logger.verbose('Success to register comment');
       return result;
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -75,6 +93,8 @@ export class CommentsDao {
         .set({ comment: comment.comment })
         .where('id = :id', { id: comment.id })
         .execute();
+      await queryRunner.commitTransaction();
+      this.logger.verbose('Success to update comment');
       return newComment.affected ? true : false;
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -87,7 +107,7 @@ export class CommentsDao {
     }
   }
 
-  async deleteComment(comment: CommentDeleteModel): Promise<boolean | Error> {
+  async deleteComment(commentId: number): Promise<boolean | Error> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -97,8 +117,10 @@ export class CommentsDao {
         .createQueryBuilder()
         .delete()
         .from(Comment)
-        .where('id = :id', { id: comment.id })
+        .where('id = :id', { id: commentId })
         .execute();
+      await queryRunner.commitTransaction();
+      this.logger.verbose('Success to delete comment');
       return result.affected ? true : false;
     } catch (error) {
       await queryRunner.rollbackTransaction();

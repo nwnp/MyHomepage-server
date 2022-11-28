@@ -89,6 +89,12 @@ export const ERROR = {
       success: false,
     },
   },
+  INVALID_COMMENT_ERROR: {
+    extensions: {
+      code: 'INVALID_COMMENT_ID',
+      success: false,
+    },
+  },
   GET_POST_COMMENTS_ERROR: {
     extensions: {
       code: 'GET_POSTS_WITH_COMMENTS_ERROR',

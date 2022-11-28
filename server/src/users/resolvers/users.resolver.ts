@@ -10,6 +10,7 @@ import { UsersService } from '../services/users.service';
 import { IUserToken } from 'src/common/interfaces/user.interface';
 import { Token } from 'graphql';
 import { UseGuards } from '@nestjs/common';
+import { CurrentUser } from 'src/common/functions/current.user';
 
 @Resolver('user')
 export class UserResolver {
@@ -20,7 +21,10 @@ export class UserResolver {
 
   @Query(() => User)
   @UseGuards(GqlAuthGuard)
-  async me(@Args({ name: 'id', type: () => Int }) id: number): Promise<User> {
+  async me(
+    @Args({ name: 'id', type: () => Int }) id: number,
+    @CurrentUser() user: User,
+  ): Promise<User> {
     return this.usersService.me(id);
   }
 

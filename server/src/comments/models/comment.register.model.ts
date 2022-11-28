@@ -7,7 +7,4 @@ export class CommentRegisterModel {
 
   @Field(() => ID)
   UserId: number;
-
-  @Field(() => ID)
-  commentedUserId: number;
 }

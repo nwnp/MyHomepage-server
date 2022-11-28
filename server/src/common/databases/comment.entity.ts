@@ -18,15 +18,19 @@ export class Comment {
   @IsString()
   comment: string;
 
+  @Column({ nullable: false, default: 0 })
+  @IsNumber()
+  secret: number;
+
   @Column()
   @IsNumber()
-  commentedUserId: number;
+  CommentedUserId: number;
 
   @Column()
   @IsNumber()
   UserId: number;
 
   @ManyToOne(() => User, (user) => user.comments)
-  @JoinColumn([{ name: 'commentedUserId', referencedColumnName: 'id' }])
+  @JoinColumn([{ name: 'CommentedUserId', referencedColumnName: 'id' }])
   user: User;
 }
