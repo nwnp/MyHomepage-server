@@ -7,7 +7,4 @@ export class PostRegisterModel {
 
   @Field(() => String)
   content: string;
-
-  @Field(() => String)
-  UserId: number;
 }

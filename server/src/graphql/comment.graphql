@@ -15,6 +15,7 @@ type Comment {
   UserId: String!
   commentedUserId: String!
   user: User
+  secret: Int
 }
 
 input CommentInput {

@@ -18,6 +18,10 @@ export class Comment {
   @IsString()
   comment: string;
 
+  @Column({ nullable: false, default: 0 })
+  @IsNumber()
+  secret: number;
+
   @Column()
   @IsNumber()
   CommentedUserId: number;

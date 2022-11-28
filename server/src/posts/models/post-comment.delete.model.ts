@@ -6,8 +6,5 @@ export class PostCommentDeleteModel {
   PostId: number;
 
   @Field(() => Int)
-  UserId: number;
-
-  @Field(() => Int)
   commentId: number;
 }

@@ -6,13 +6,10 @@ import { PostsDao } from '../dao/posts.dao';
 import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
 import { GraphQLError } from 'graphql';
-import { PostDeleteModel } from '../models/post.delete.model';
 import { PostComment } from 'src/common/databases/post-comment.entity';
-import { PostCommentsModel } from '../models/post.comments.model';
 import { PostCommentRegisterModel } from '../models/post-comment.register.model';
 import { PostCommentDeleteModel } from '../models/post-comment.delete.model';
 import { PostCommentUpdateModel } from '../models/post-comment.update.model';
-import { LimitedPostsModel } from '../models/limited.post.model';
 
 @Injectable()
 export class PostsService {
@@ -20,18 +17,35 @@ export class PostsService {
     private readonly postsDao: PostsDao,
     private readonly usersDao: UsersDao,
   ) {}
-  async getPostsByUserId(UserId: number): Promise<Post[] | Error> {
-    const isExistUser = await this.usersDao.getUserById(UserId);
+  async getPostsByUserId(userId: number): Promise<Post[] | Error> {
+    const isExistUser = await this.usersDao.getUserById(userId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
-    return await this.postsDao.getPostsByUserId(UserId);
+    return await this.postsDao.getPostsByUserId(userId);
   }
 
   async getPostWithComment(
-    info: PostCommentsModel,
+    postId: number,
+    userId: number,
   ): Promise<PostComment[] | Error> {
-    const isExistUser = await this.usersDao.getUserById(info.UserId);
+    const isExistUser = await this.usersDao.getUserById(userId);
+    if (!isExistUser)
+      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
+
+    const isExistPost = await this.postsDao.getPostById(postId);
+    if (!isExistPost)
+      return new GraphQLError('유효하지 않은 게시글', ERROR.INVALID_POST);
+
+    return await this.postsDao.getPostWithComment(postId);
+  }
+
+  async getLimitedPosts(count: number, userId: number): Promise<Post[]> {
+    return await this.postsDao.getLimitedPosts(count, userId);
+  }
+
+  async registerPostComment(info: PostCommentRegisterModel, userId: number) {
+    const isExistUser = await this.usersDao.getUserById(userId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
@@ -39,40 +53,27 @@ export class PostsService {
     if (!isExistPost)
       return new GraphQLError('유효하지 않은 게시글', ERROR.INVALID_POST);
 
-    return await this.postsDao.getPostWithComment(info);
+    return await this.postsDao.registerPostComment(info, userId);
   }
 
-  async getLimitedPosts(post: LimitedPostsModel) {
-    return await this.postsDao.getLimitedPosts(post);
-  }
-
-  async registerPostComment(info: PostCommentRegisterModel) {
-    const isExistUser = await this.usersDao.getUserById(info.UserId);
+  async registerPost(post: PostRegisterModel, userId: number): Promise<any> {
+    const isExistUser = await this.usersDao.getUserById(userId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
-    const isExistPost = await this.postsDao.getPostById(info.PostId);
-    if (!isExistPost)
-      return new GraphQLError('유효하지 않은 게시글', ERROR.INVALID_POST);
-
-    return await this.postsDao.registerPostComment(info);
+    return await this.postsDao.registerPost(post, userId);
   }
 
-  async register(post: PostRegisterModel): Promise<any> {
-    const isExistUser = await this.usersDao.getUserById(post.UserId);
-    if (!isExistUser)
-      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
-
-    return await this.postsDao.register(post);
-  }
-
-  async update(post: PostUpdateModel): Promise<boolean | Error> {
-    const isExistUser = await this.usersDao.getUserById(post.UserId);
+  async updatePost(
+    post: PostUpdateModel,
+    userId: number,
+  ): Promise<boolean | Error> {
+    const isExistUser = await this.usersDao.getUserById(userId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
     const isExistPost = await this.postsDao.getPostById(post.PostId);
-    if (post.UserId != isExistPost.UserId)
+    if (userId != isExistPost.UserId)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
     const updateContent = post.content ? post.content : null;
@@ -84,24 +85,25 @@ export class PostsService {
       content: updateContent,
     };
 
-    return await this.postsDao.update(post);
+    return await this.postsDao.updatePost(post);
   }
 
-  async delete(post: PostDeleteModel): Promise<boolean | Error> {
-    const isExistUser = await this.usersDao.getUserById(post.UserId);
+  async deletePost(postId: number, userId: number): Promise<boolean | Error> {
+    const isExistUser = await this.usersDao.getUserById(userId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
-    const isExistPost = await this.postsDao.getPostById(post.id);
+    const isExistPost = await this.postsDao.getPostById(postId);
     if (!isExistPost)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
-    return await this.postsDao.delete(post.id);
+    return await this.postsDao.deletePost(postId);
   }
 
   async deletePostComment(
     post: PostCommentDeleteModel,
+    userId: number,
   ): Promise<boolean | Error> {
-    const isExistUser = await this.usersDao.getUserById(post.UserId);
+    const isExistUser = await this.usersDao.getUserById(userId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
@@ -115,7 +117,7 @@ export class PostsService {
     if (!isPostComment)
       return new GraphQLError('유효하지 않은 댓글', ERROR.GET_POST_COMMENT);
 
-    if (isPostComment.CommentedUserId != post.UserId)
+    if (isPostComment.CommentedUserId != userId)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
     return await this.postsDao.deletePostComment(post.commentId);
@@ -123,8 +125,9 @@ export class PostsService {
 
   async updatePostComment(
     post: PostCommentUpdateModel,
+    userId: number,
   ): Promise<boolean | Error> {
-    const isExistUser = await this.usersDao.getUserById(post.UserId);
+    const isExistUser = await this.usersDao.getUserById(userId);
     if (!isExistUser)
       return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
 
