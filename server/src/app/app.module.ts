@@ -15,6 +15,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PostsModule } from 'src/posts/posts.module';
 import { PostComment } from 'src/common/databases/post-comment.entity';
+import { FollowsModule } from 'src/follows/follows.module';
+import { Follow } from 'src/common/databases/follows.entity';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { PostComment } from 'src/common/databases/post-comment.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_SCHEMA,
-      entities: [User, Post, VisitLog, BGM, Comment, PostComment],
+      entities: [User, Post, VisitLog, BGM, Comment, PostComment, Follow],
       synchronize: true,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -45,6 +47,7 @@ import { PostComment } from 'src/common/databases/post-comment.entity';
     UsersModule,
     PostsModule,
     CommentsModule,
+    FollowsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
