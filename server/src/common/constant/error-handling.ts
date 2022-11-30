@@ -131,4 +131,10 @@ export const ERROR = {
       success: false,
     },
   },
+  REGISTER_FOLLOWING: {
+    extensions: {
+      code: 'REGISTER_FOLLOWING_ERROR',
+      success: false,
+    },
+  },
 };

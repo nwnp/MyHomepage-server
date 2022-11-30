@@ -11,6 +11,7 @@ import { IUserToken } from 'src/common/interfaces/user.interface';
 import { Token } from 'graphql';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/common/functions/current.user';
+import { UserFindModel } from '../models/user.find.model';
 
 @Resolver('user')
 export class UserResolver {
@@ -35,8 +36,11 @@ export class UserResolver {
 
   @Query(() => User)
   @UseGuards(GqlAuthGuard)
-  async searchUser(@Args('nickname') nickname: string): Promise<User> {
-    return this.usersService.searchUser(nickname);
+  async userFind(
+    @Args('user') user: UserFindModel,
+    @CurrentUser() userInfo: User,
+  ): Promise<User> {
+    return this.usersService.userFind(user);
   }
 
   @Mutation(() => Token)

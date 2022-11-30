@@ -1,0 +1,14 @@
+type Follow {
+  id: ID!
+  FollowingId: Int
+  FollowerId: Int
+}
+
+# type RegisterFollowing {
+#   FollowingId: Int! # Header token
+#   FollowerId: Int! # body로 받기
+# }
+
+type Mutation {
+  registerFollowing(followerId: ID!): Boolean!
+}

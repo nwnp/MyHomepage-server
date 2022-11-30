@@ -12,6 +12,7 @@ import { Post } from './posts.entity';
 import { BGM } from './bgms.entity';
 import { Comment } from './comment.entity';
 import { PostComment } from './post-comment.entity';
+import { Follow } from './follows.entity';
 
 @Entity('User')
 export class User {
@@ -91,4 +92,10 @@ export class User {
 
   @OneToMany(() => PostComment, (postComment) => postComment.user)
   postComment: PostComment;
+
+  @OneToMany(() => Follow, (follow) => follow.followings)
+  followings: Follow;
+
+  @OneToMany(() => Follow, (follow) => follow.followers)
+  followers: Follow;
 }

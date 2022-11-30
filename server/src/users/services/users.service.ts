@@ -7,6 +7,7 @@ import { User } from 'src/common/databases/users.entity';
 import * as bcrypt from 'bcrypt';
 import { UserCheckModel } from '../models/user.check.model';
 import { UserUpdateModel } from '../models/user.update.model';
+import { UserFindModel } from '../models/user.find.model';
 
 @Injectable()
 export class UsersService {
@@ -23,12 +24,12 @@ export class UsersService {
     return await this.usersDao.allUser();
   }
 
-  async searchUser(nickname: string): Promise<User> {
-    const searchedUser = await this.usersDao.getUserByNickname(nickname);
-    if (!searchedUser)
-      throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
-
-    return searchedUser;
+  async userFind(userInfo: UserFindModel): Promise<User> {
+    const user = userInfo.email
+      ? await this.usersDao.getUserByEmail(userInfo.email)
+      : await this.usersDao.getUserByNickname(userInfo.nickname);
+    if (!user) throw new GraphQLError('존재하지 않는 회원', ERROR.INVALID_USER);
+    return user;
   }
 
   async userCheck(userInfo: UserCheckModel): Promise<boolean> {
