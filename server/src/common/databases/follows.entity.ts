@@ -8,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+//TODO: 내가 로그인 했을 때, 나를 팔로우하고 있는 User list 가져오는 Join SQL 작성
+
 @Entity('Follow')
 export class Follow {
   @PrimaryGeneratedColumn()
@@ -16,7 +18,7 @@ export class Follow {
 
   @Column({
     type: 'int',
-    unique: true,
+    unique: false,
     nullable: false,
   })
   @IsNumber()
@@ -24,7 +26,7 @@ export class Follow {
 
   @Column({
     type: 'int',
-    unique: true,
+    unique: false,
     nullable: false,
   })
   @IsNumber()
