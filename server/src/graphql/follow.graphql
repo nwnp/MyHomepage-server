@@ -4,10 +4,19 @@ type Follow {
   FollowerId: Int
 }
 
+type FollowCount {
+  following_id: Int!
+  im_following: Int!
+}
+
 # type RegisterFollowing {
 #   FollowingId: Int! # Header token
 #   FollowerId: Int! # body로 받기
 # }
+
+type Query {
+  followsForLogin(FollowingId: ID!): FollowCount!
+}
 
 type Mutation {
   registerFollowing(followerId: ID!): Boolean!

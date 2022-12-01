@@ -137,4 +137,10 @@ export const ERROR = {
       success: false,
     },
   },
+  REGISTER_UNFOLLOWING: {
+    extensions: {
+      code: 'REGISTER_UNFOLLOWING_ERROR',
+      success: false,
+    },
+  },
 };
