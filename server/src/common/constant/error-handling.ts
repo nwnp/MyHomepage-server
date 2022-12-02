@@ -137,4 +137,18 @@ export const ERROR = {
       success: false,
     },
   },
+  REGISTER_UNFOLLOWING: {
+    extensions: {
+      code: 'REGISTER_UNFOLLOWING_ERROR',
+      success: false,
+    },
+  },
+  FOLLOWING(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
 };
