@@ -17,6 +17,8 @@ import { PostsModule } from 'src/posts/posts.module';
 import { PostComment } from 'src/common/databases/post-comment.entity';
 import { FollowsModule } from 'src/follows/follows.module';
 import { Follow } from 'src/common/databases/follows.entity';
+import { CalendarsModule } from 'src/calendars/calendars.module';
+import { Calendar } from 'src/common/databases/calendars.entity';
 
 @Module({
   imports: [
@@ -28,7 +30,16 @@ import { Follow } from 'src/common/databases/follows.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_SCHEMA,
-      entities: [User, Post, VisitLog, BGM, Comment, PostComment, Follow],
+      entities: [
+        User,
+        Post,
+        VisitLog,
+        BGM,
+        Comment,
+        PostComment,
+        Follow,
+        Calendar,
+      ],
       synchronize: true,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -48,6 +59,7 @@ import { Follow } from 'src/common/databases/follows.entity';
     PostsModule,
     CommentsModule,
     FollowsModule,
+    CalendarsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
