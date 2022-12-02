@@ -1,13 +1,42 @@
+#
+#   FollowingId: Int! # Header token
+#   FollowerId: Int! # body로 받기
+#
+
+# User type
+type User {
+  id: ID
+  email: String
+  nickname: String
+  gender: String
+  job: String
+  githubUrl: String
+  blogUrl: String
+}
+
+# Follow type
 type Follow {
   id: ID!
   FollowingId: Int
   FollowerId: Int
 }
 
-# type RegisterFollowing {
-#   FollowingId: Int! # Header token
-#   FollowerId: Int! # body로 받기
-# }
+type FollowCount {
+  following_me: Int!
+  im_following: Int!
+}
+
+type Following {
+  id: ID!
+  FollowingId: Int
+  FollowerId: Int
+  followers: User
+}
+
+type Query {
+  followsForLogin: FollowCount! # count만 return
+  followList(type: String!): [Following] # 나를 팔로우하고 있는 user list API
+}
 
 type Mutation {
   registerFollowing(followerId: ID!): Boolean!
