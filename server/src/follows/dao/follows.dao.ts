@@ -16,8 +16,45 @@ export class FollowsDao {
     private readonly dataSource: DataSource,
   ) {}
 
-  // TODO: following API
-  // TODO: follower API
+  // 나를 팔로우하는 user API
+  async followingMe(userId: number): Promise<Follow[]> {
+    try {
+      console.log('following me');
+      const followerList = await this.dataSource
+        .getRepository(Follow)
+        .createQueryBuilder('follow')
+        .innerJoinAndSelect('follow.followers', 'user')
+        .where('follow.FollowingId = :FollowingId', { FollowingId: userId })
+        .getMany();
+      return followerList;
+    } catch (error) {
+      console.error(error);
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.FOLLOWING('FOLLOWING_ME_API_ERROR'),
+      );
+    }
+  }
+
+  // 내가 팔로우하고 있는 user API
+  async imFollowing(userId: number): Promise<Follow[]> {
+    try {
+      console.log('im following');
+      const followerList = await this.dataSource
+        .getRepository(Follow)
+        .createQueryBuilder('follow')
+        .innerJoinAndSelect('follow.followings', 'user')
+        .where('follow.FollowerId = :FollowerId', { FollowerId: userId })
+        .getMany();
+      return followerList;
+    } catch (error) {
+      console.error(error);
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.FOLLOWING('IM_FOLLOWING_API_ERROR'),
+      );
+    }
+  }
 
   async followsForLogin(FollowingId: number): Promise<FollowsForLogin> {
     try {

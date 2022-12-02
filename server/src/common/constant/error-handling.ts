@@ -143,4 +143,12 @@ export const ERROR = {
       success: false,
     },
   },
+  FOLLOWING(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
 };
