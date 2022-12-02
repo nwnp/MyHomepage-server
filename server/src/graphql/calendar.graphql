@@ -1,0 +1,16 @@
+type Calendar {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  UserId: Int!
+  PostId: Int!
+}
+
+input RegisterPostInCal {
+  PostId: Int!
+  UserId: Int!
+}
+
+type Mutation {
+  registerPostInCal(info: RegisterPostInCal!): Boolean!
+}
