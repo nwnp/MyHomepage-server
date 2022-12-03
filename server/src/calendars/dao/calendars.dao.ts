@@ -1,3 +1,4 @@
+import { CalendarsByDateModel } from './../models/calendars.list.model';
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { DataSource } from 'typeorm';
@@ -10,11 +11,6 @@ export class CalendarsDao {
   private readonly logger = new Logger('CALENDAR-DB');
   constructor(private readonly dataSource: DataSource) {}
 
-  //   new Date().toISOString().
-  //   replace(/T/, ' ').      // replace T with a space
-  //   replace(/\..+/, '')     // delete the dot and everything after
-  // > '2012-11-04 14:55:45'
-
   async checkPostInCal(info: CalRegisterModel): Promise<Calendar> {
     try {
       const isExistCal = await this.dataSource
@@ -22,14 +18,54 @@ export class CalendarsDao {
         .createQueryBuilder('cal')
         .where('cal.UserId = :UserId', { UserId: info.UserId })
         .andWhere('cal.PostId = :PostId', { PostId: info.PostId })
-        .execute();
+        .getOne();
       return isExistCal;
     } catch (error) {
       console.error(error);
-      this.logger.error('GET CALENDAR API ERROR');
+      this.logger.error('GET_CALENDAR_API_ERROR');
       throw new GraphQLError(
         'SERVER ERROR',
         ERROR.CALENDAR('GET_CALENDAR_API_ERROR'),
+      );
+    }
+  }
+
+  async getCalendarsByDate(info: CalendarsByDateModel): Promise<Calendar[]> {
+    try {
+      const date = info.date.split('.')[0].split(' ')[0];
+      const calendars = await this.dataSource
+        .getRepository(Calendar)
+        .createQueryBuilder('calendar')
+        .innerJoinAndSelect('calendar.post', 'post')
+        .where('calendar.UserId = :UserId', { UserId: info.UserId })
+        .andWhere(`calendar.createdAt LIKE '%${date}%'`)
+        .getMany();
+      return calendars;
+    } catch (error) {
+      console.error(error);
+      this.logger.error('GET_POSTS_IN_CALENDAR_API_ERROR');
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.CALENDAR('GET_POSTS_IN_CALENDAR_API_ERROR'),
+      );
+    }
+  }
+
+  async getAllPostsInCal(UserId: number): Promise<Calendar[]> {
+    try {
+      const calendars = await this.dataSource
+        .getRepository(Calendar)
+        .createQueryBuilder('calendar')
+        .innerJoinAndSelect('calendar.post', 'post')
+        .where('calendar.UserId = :UserId', { UserId })
+        .getMany();
+      return calendars;
+    } catch (error) {
+      this.logger.error('GET_ALL_POSTS_IN_CAL_ERROR');
+      console.error(error);
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.CALENDAR('GET_ALL_POSTS_IN_CAL_ERROR'),
       );
     }
   }

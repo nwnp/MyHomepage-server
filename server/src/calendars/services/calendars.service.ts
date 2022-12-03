@@ -1,4 +1,4 @@
-import { Length } from 'class-validator';
+import { returnDate } from './../../common/functions/functions';
 import { Calendar } from 'src/common/databases/calendars.entity';
 import { UsersDao } from './../../users/dao/users.dao';
 import { ERROR } from 'src/common/constant/error-handling';
@@ -7,6 +7,7 @@ import { PostsDao } from './../../posts/dao/posts.dao';
 import { CalendarsDao } from './../dao/calendars.dao';
 import { Injectable } from '@nestjs/common';
 import { CalRegisterModel } from '../models/calendar.register.model';
+import { CalendarsByDateModel } from '../models/calendars.list.model';
 
 @Injectable()
 export class CalendarsService {
@@ -15,6 +16,25 @@ export class CalendarsService {
     private readonly postsDao: PostsDao,
     private readonly usersDao: UsersDao,
   ) {}
+
+  async getCalendarsByDate(info: CalendarsByDateModel): Promise<Calendar[]> {
+    const calendars = await this.calendarsDao.getCalendarsByDate(info);
+    const parsingData = await returnDate(calendars);
+    return parsingData;
+  }
+
+  async getAllPostsInCal(UserId: number): Promise<Calendar[] | Error> {
+    const isExistUser = await this.usersDao.getUserById(UserId);
+    if (!isExistUser) {
+      return new GraphQLError(
+        '유효하지 않은 회원',
+        ERROR.USER('유효하지 않은 회원'),
+      );
+    }
+    const calendars = await this.calendarsDao.getAllPostsInCal(UserId);
+    const parsingData = await returnDate(calendars);
+    return parsingData;
+  }
 
   async registerPostInCal(info: CalRegisterModel): Promise<boolean | Error> {
     const isExistPost = await this.postsDao.getPostById(info.PostId);
@@ -41,7 +61,7 @@ export class CalendarsService {
     }
 
     const isExist: Calendar = await this.calendarsDao.checkPostInCal(info);
-    const bool = isExist.id ? true : false;
+    const bool = isExist ? true : false;
     if (bool)
       return new GraphQLError(
         '이미 등록된 게시글',

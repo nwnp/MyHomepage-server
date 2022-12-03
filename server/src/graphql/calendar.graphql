@@ -6,9 +6,37 @@ type Calendar {
   PostId: Int!
 }
 
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  createdAt: String
+  imageUrl: String
+  user: User
+}
+
 input RegisterPostInCal {
   PostId: Int!
   UserId: Int!
+}
+
+input CalendarsByDate {
+  UserId: Int!
+  date: String
+}
+
+type CalendarPost {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  UserId: Int!
+  post: Post!
+}
+
+type Query {
+  getAllPostsInCal(UserId: Int!): [CalendarPost] # all
+  # getCalListById(info: CalListById!): [CalendarPost] # 특정 날짜
+  getCalendarsByDate(info: CalendarsByDate!): [CalendarPost]
 }
 
 type Mutation {
