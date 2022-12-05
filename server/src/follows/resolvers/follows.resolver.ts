@@ -5,7 +5,7 @@ import { FollowsService } from './../services/follows.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/common/functions/current.user';
-import { FollowListType, FollowsForLogin } from 'src/common/types/follows';
+import { FollowListType, FollowsForLogin } from 'src/common/types';
 import { Follow } from 'src/common/databases/follows.entity';
 import { GraphQLError } from 'graphql';
 

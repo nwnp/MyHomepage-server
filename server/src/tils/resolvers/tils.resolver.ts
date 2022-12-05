@@ -8,6 +8,7 @@ import { CurrentUser } from 'src/common/functions/current.user';
 import { Til } from 'src/common/databases/tils.entity';
 import { TilUpdateModel } from '../models/til.update.model';
 import { TilDeleteModel } from '../models/til.delete.modle';
+import { TilLimitedModel } from '../models/til.limited.model';
 
 @Resolver()
 export class TilsResolver {
@@ -20,6 +21,12 @@ export class TilsResolver {
     @CurrentUser() user: User,
   ): Promise<Til[]> {
     return this.tilsService.getTilsByUserId(UserId, user.id);
+  }
+
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async getLimitedTils(@Args('til') til: TilLimitedModel): Promise<Til[]> {
+    return await this.tilsService.getLimitedTils(til);
   }
 
   @Mutation(() => Boolean)

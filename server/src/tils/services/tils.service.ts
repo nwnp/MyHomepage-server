@@ -6,6 +6,8 @@ import { TilRegisterModel } from '../models/til.register.model';
 import { Til } from 'src/common/databases/tils.entity';
 import { TilUpdateModel } from '../models/til.update.model';
 import { TilDeleteModel } from '../models/til.delete.modle';
+import { TilLimitedModel } from '../models/til.limited.model';
+import { returnDate } from 'src/common/functions/functions';
 
 @Injectable()
 export class TilsService {
@@ -14,7 +16,14 @@ export class TilsService {
   async getTilsByUserId(UserId: number, headerUserId: number): Promise<Til[]> {
     if (UserId !== headerUserId)
       throw new GraphQLError('유효하지 않은 회원', ERROR.USER('INVALID_USER'));
-    return await this.tilsDao.getTilsByUserId(UserId);
+    const tils = await this.tilsDao.getTilsByUserId(UserId);
+    return await returnDate(tils);
+  }
+
+  async getLimitedTils(til: TilLimitedModel): Promise<Til[]> {
+    const tils = await this.tilsDao.getLimitedTils(til);
+    const parsingData: Til[] = await returnDate(tils);
+    return parsingData;
   }
 
   async registerTil(

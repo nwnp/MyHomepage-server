@@ -7,6 +7,7 @@ import { Repository, DataSource } from 'typeorm';
 import { TilRegisterModel } from '../models/til.register.model';
 import { TilUpdateModel } from '../models/til.update.model';
 import { TilDeleteModel } from '../models/til.delete.modle';
+import { TilLimitedModel } from '../models/til.limited.model';
 
 @Injectable()
 export class TilsDao {
@@ -50,6 +51,25 @@ export class TilsDao {
         'SERVER ERROR',
         ERROR.TIL('GET ONLY ONE TIL ERROR'),
       );
+    }
+  }
+
+  // TIL Read ➡️ 최신 TIL 3개만 가져오기
+  async getLimitedTils(til: TilLimitedModel): Promise<Til[]> {
+    try {
+      const tils = await this.dataSource
+        .getRepository(Til)
+        .createQueryBuilder('til')
+        .leftJoinAndSelect('til.user', 'user')
+        .where('til.UserId = :UserId', { UserId: til.UserId })
+        .orderBy('til.id', 'DESC')
+        .limit(til.count)
+        .getMany();
+      return tils;
+    } catch (error) {
+      this.logger.error('SERVER ERROR');
+      console.error(error);
+      throw new GraphQLError('SERVER ERROR', ERROR.TIL('LIMITED_TIL_ERROR'));
     }
   }
 
