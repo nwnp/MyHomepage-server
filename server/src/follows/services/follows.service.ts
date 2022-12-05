@@ -4,7 +4,7 @@ import { UsersDao } from './../../users/dao/users.dao';
 import { FollowsDao } from './../dao/follows.dao';
 import { Injectable } from '@nestjs/common';
 import { FollowingRegister } from '../models/following.register.model';
-import { FollowListType, FollowsForLogin } from 'src/common/types/follows';
+import { FollowListType, FollowsForLogin } from 'src/common/types';
 import { Follow } from 'src/common/databases/follows.entity';
 
 @Injectable()
