@@ -10,5 +10,6 @@ import { PostComment } from 'src/common/databases/post-comment.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Post, PostComment]), UsersModule],
   providers: [PostsService, PostResolver, PostsDao],
+  exports: [PostsDao],
 })
 export class PostsModule {}
