@@ -20,6 +20,7 @@ import { Follow } from 'src/common/databases/follows.entity';
 import { CalendarsModule } from 'src/calendars/calendars.module';
 import { Calendar } from 'src/common/databases/calendars.entity';
 import { Til } from 'src/common/databases/tils.entity';
+import { TilsModule } from 'src/tils/tils.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { Til } from 'src/common/databases/tils.entity';
     CommentsModule,
     FollowsModule,
     CalendarsModule,
+    TilsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

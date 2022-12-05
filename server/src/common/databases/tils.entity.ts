@@ -29,6 +29,10 @@ export class Til {
   @IsString()
   til_content: string;
 
+  @Column()
+  @IsNumber()
+  UserId: number;
+
   @CreateDateColumn()
   @IsDate()
   createdAt: Date;

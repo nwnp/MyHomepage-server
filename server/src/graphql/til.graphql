@@ -13,6 +13,24 @@ input RegisterTil {
   UserId: Int!
 }
 
+input UpdateTil {
+  til_content: String
+  title: String
+  UserId: Int!
+  tilId: ID!
+}
+
+input DeleteTil {
+  UserId: Int!
+  tilId: ID!
+}
+
+type Query {
+  getTilsByUserId(UserId: Int!): [Til]
+}
+
 type Mutation {
-  registerTil(til: RegisterTil!): Til
+  registerTil(til: RegisterTil!): Boolean!
+  updateTil(til: UpdateTil!): Boolean!
+  deleteTil(til: DeleteTil!): Boolean!
 }
