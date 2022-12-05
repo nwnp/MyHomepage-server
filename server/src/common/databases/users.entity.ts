@@ -13,6 +13,7 @@ import { BGM } from './bgms.entity';
 import { Comment } from './comment.entity';
 import { PostComment } from './post-comment.entity';
 import { Follow } from './follows.entity';
+import { Calendar } from './calendars.entity';
 
 @Entity('User')
 export class User {
@@ -98,4 +99,7 @@ export class User {
 
   @OneToMany(() => Follow, (follow) => follow.followers)
   followers: Follow;
+
+  @OneToMany(() => Calendar, (calendar) => calendar.user)
+  calendars: Calendar;
 }

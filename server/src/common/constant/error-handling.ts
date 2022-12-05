@@ -143,7 +143,31 @@ export const ERROR = {
       success: false,
     },
   },
+  POST(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
   FOLLOWING(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
+  CALENDAR(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
+  USER(message: string) {
     return {
       extensions: {
         code: message,
