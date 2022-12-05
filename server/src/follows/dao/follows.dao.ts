@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Follow } from 'src/common/databases/follows.entity';
 import { Repository, DataSource } from 'typeorm';
 import { FollowingRegister } from '../models/following.register.model';
-import { FollowsForLogin } from 'src/common/types/follows';
+import { FollowsForLogin } from 'src/common/types';
 
 @Injectable()
 export class FollowsDao {

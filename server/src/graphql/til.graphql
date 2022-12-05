@@ -1,0 +1,42 @@
+type Til {
+  id: ID!
+  title: String
+  til_content: String
+  createdAt: String
+  udpatedAt: String
+  UserId: Int!
+}
+
+input RegisterTil {
+  title: String
+  til_content: String!
+  UserId: Int!
+}
+
+input UpdateTil {
+  til_content: String
+  title: String
+  UserId: Int!
+  tilId: ID!
+}
+
+input DeleteTil {
+  UserId: Int!
+  tilId: ID!
+}
+
+input LimitedTils {
+  UserId: Int!
+  count: Int!
+}
+
+type Query {
+  getTilsByUserId(UserId: Int!): [Til]
+  getLimitedTils(til: LimitedTils!): [Til]
+}
+
+type Mutation {
+  registerTil(til: RegisterTil!): Boolean!
+  updateTil(til: UpdateTil!): Boolean!
+  deleteTil(til: DeleteTil!): Boolean!
+}
