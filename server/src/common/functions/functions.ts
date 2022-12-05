@@ -1,5 +1,4 @@
 import { Calendar } from '../databases/calendars.entity';
-import { Post } from '../databases/posts.entity';
 
 export const map = (cb, iter: string[] | Calendar[]): string[] => {
   const result = [];
