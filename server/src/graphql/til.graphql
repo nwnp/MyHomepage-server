@@ -1,0 +1,18 @@
+type Til {
+  id: ID!
+  title: String
+  til_content: String
+  createdAt: String
+  udpatedAt: String
+  UserId: Int!
+}
+
+input RegisterTil {
+  title: String
+  til_content: String!
+  UserId: Int!
+}
+
+type Mutation {
+  registerTil(til: RegisterTil!): Til
+}

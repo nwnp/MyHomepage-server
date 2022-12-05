@@ -19,6 +19,7 @@ import { FollowsModule } from 'src/follows/follows.module';
 import { Follow } from 'src/common/databases/follows.entity';
 import { CalendarsModule } from 'src/calendars/calendars.module';
 import { Calendar } from 'src/common/databases/calendars.entity';
+import { Til } from 'src/common/databases/tils.entity';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { Calendar } from 'src/common/databases/calendars.entity';
         PostComment,
         Follow,
         Calendar,
+        Til,
       ],
       synchronize: true,
     }),
