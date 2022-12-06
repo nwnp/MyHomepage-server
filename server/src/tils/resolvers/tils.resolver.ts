@@ -1,3 +1,4 @@
+import { TilCommentRegisterModel } from './../models/til.register-comment.model';
 import { User } from 'src/common/databases/users.entity';
 import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
 import { UseGuards } from '@nestjs/common';
@@ -9,6 +10,7 @@ import { Til } from 'src/common/databases/tils.entity';
 import { TilUpdateModel } from '../models/til.update.model';
 import { TilDeleteModel } from '../models/til.delete.modle';
 import { TilLimitedModel } from '../models/til.limited.model';
+import { TilComment } from 'src/common/databases/til-comments.entity';
 
 @Resolver()
 export class TilsResolver {
@@ -27,6 +29,12 @@ export class TilsResolver {
   @UseGuards(GqlAuthGuard)
   async getLimitedTils(@Args('til') til: TilLimitedModel): Promise<Til[]> {
     return await this.tilsService.getLimitedTils(til);
+  }
+
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async getTilWithComment(@Args('tilId') tilId: number): Promise<TilComment[]> {
+    return await this.tilsService.getTilWithComment(tilId);
   }
 
   @Mutation(() => Boolean)
@@ -54,5 +62,14 @@ export class TilsResolver {
     @CurrentUser() user: User,
   ): Promise<boolean> {
     return await this.tilsService.deleteTil(til, user.id);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async registerTilComment(
+    @Args('til') til: TilCommentRegisterModel,
+    @CurrentUser() user: User,
+  ): Promise<boolean> {
+    return await this.tilsService.registerTilComment(til, user.id);
   }
 }

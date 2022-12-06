@@ -8,6 +8,8 @@ import { TilRegisterModel } from '../models/til.register.model';
 import { TilUpdateModel } from '../models/til.update.model';
 import { TilDeleteModel } from '../models/til.delete.modle';
 import { TilLimitedModel } from '../models/til.limited.model';
+import { TilCommentRegisterModel } from '../models/til.register-comment.model';
+import { TilComment } from 'src/common/databases/til-comments.entity';
 
 @Injectable()
 export class TilsDao {
@@ -158,6 +160,59 @@ export class TilsDao {
     } finally {
       await queryRunner.release();
       this.logger.verbose('Release Transaction to delete til');
+    }
+  }
+
+  // TIL-Comment Create
+  async registerTilComment(til: TilCommentRegisterModel): Promise<boolean> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.logger.verbose('Start transaction to register til-comment');
+      const newTil = await this.dataSource
+        .createQueryBuilder()
+        .insert()
+        .into(TilComment)
+        .values({
+          CommentedUserId: til.UserId,
+          TilId: til.TilId,
+          til_comment: til.til_comment,
+        })
+        .execute();
+      await queryRunner.commitTransaction();
+      this.logger.verbose('Success to register til-comment');
+      return newTil.generatedMaps.length ? true : false;
+    } catch (error) {
+      this.logger.error('Transaction ERROR');
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+      this.logger.verbose('Rollback Transaction');
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.TIL('TIL-COMMENT_REGISTER_ERROR'),
+      );
+    } finally {
+      await queryRunner.release();
+      this.logger.verbose('Released transaction to register til-comment');
+    }
+  }
+
+  // TIL-Comment Read
+  async getTilWithComment(tilId: number): Promise<TilComment[]> {
+    try {
+      const tils = await this.dataSource
+        .getRepository(TilComment)
+        .createQueryBuilder('tilComment')
+        .innerJoinAndSelect('tilComment.user', 'user')
+        .innerJoinAndSelect('tilComment.til', 'til')
+        .where('tilComment.TilId = :id', { id: tilId })
+        .getMany();
+      return tils;
+    } catch (error) {
+      this.logger.error('GetTilWithComment ERROR');
+      console.error(error);
+      new GraphQLError('TIL 리스트 에러', ERROR.TIL('GET_TILS_ERROR'));
     }
   }
 }

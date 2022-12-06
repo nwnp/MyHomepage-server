@@ -1,10 +1,29 @@
+type User {
+  id: ID
+  email: String
+  nickname: String
+  gender: String
+  job: String
+  githubUrl: String
+  blogUrl: String
+}
+
 type Til {
   id: ID!
   title: String
-  til_content: String
+  til_comment: String
   createdAt: String
   udpatedAt: String
   UserId: Int!
+}
+
+type TilComment {
+  id: ID!
+  til_comment: String!
+  CommentedUserId: Int!
+  createdAt: String!
+  user: User!
+  til: Til!
 }
 
 input RegisterTil {
@@ -30,8 +49,15 @@ input LimitedTils {
   count: Int!
 }
 
+input RegisterTilComment {
+  TilId: ID!
+  UserId: Int!
+  til_comment: String!
+}
+
 type Query {
   getTilsByUserId(UserId: Int!): [Til]
+  getTilWithComment(tilId: ID!): [TilComment]
   getLimitedTils(til: LimitedTils!): [Til]
 }
 
@@ -39,4 +65,5 @@ type Mutation {
   registerTil(til: RegisterTil!): Boolean!
   updateTil(til: UpdateTil!): Boolean!
   deleteTil(til: DeleteTil!): Boolean!
+  registerTilComment(til: RegisterTilComment!): Boolean!
 }
