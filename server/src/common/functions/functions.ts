@@ -1,6 +1,8 @@
 import { Calendar } from '../databases/calendars.entity';
+import { Til } from '../databases/tils.entity';
+import { IteratorType } from '../types';
 
-export const map = (cb, iter: string[] | Calendar[]): string[] => {
+export const map = (cb, iter: IteratorType): string[] => {
   const result = [];
   for (const it of iter) {
     result.push(cb(it));
@@ -8,13 +10,10 @@ export const map = (cb, iter: string[] | Calendar[]): string[] => {
   return result;
 };
 
-export const returnDate = async (data: Calendar[]): Promise<Calendar[]> => {
+export const returnDate = async (data: Calendar[] | Til[]) => {
   const parsingData = map(
     (p: Date) => p.toISOString().replace(/T/, ' '),
-    map(
-      (p: Calendar) => p.createdAt,
-      data.filter((p) => p.createdAt),
-    ),
+    map((p: Calendar) => p.createdAt, data),
   );
   const result = [];
 

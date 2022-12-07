@@ -175,4 +175,12 @@ export const ERROR = {
       },
     };
   },
+  TIL(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
 };

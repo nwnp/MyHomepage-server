@@ -19,6 +19,9 @@ import { FollowsModule } from 'src/follows/follows.module';
 import { Follow } from 'src/common/databases/follows.entity';
 import { CalendarsModule } from 'src/calendars/calendars.module';
 import { Calendar } from 'src/common/databases/calendars.entity';
+import { Til } from 'src/common/databases/tils.entity';
+import { TilsModule } from 'src/tils/tils.module';
+import { TilComment } from 'src/common/databases/til-comments.entity';
 
 @Module({
   imports: [
@@ -39,6 +42,8 @@ import { Calendar } from 'src/common/databases/calendars.entity';
         PostComment,
         Follow,
         Calendar,
+        Til,
+        TilComment,
       ],
       synchronize: true,
     }),
@@ -60,6 +65,7 @@ import { Calendar } from 'src/common/databases/calendars.entity';
     CommentsModule,
     FollowsModule,
     CalendarsModule,
+    TilsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
