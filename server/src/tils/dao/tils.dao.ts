@@ -8,8 +8,9 @@ import { TilRegisterModel } from '../models/til.register.model';
 import { TilUpdateModel } from '../models/til.update.model';
 import { TilDeleteModel } from '../models/til.delete.modle';
 import { TilLimitedModel } from '../models/til.limited.model';
-import { TilCommentRegisterModel } from '../models/til.register-comment.model';
+import { TilCommentRegisterModel } from '../models/til-comment.register.model';
 import { TilComment } from 'src/common/databases/til-comments.entity';
+import { TilCommentUpdateModel } from '../models/til-comment.update.model';
 
 @Injectable()
 export class TilsDao {
@@ -215,4 +216,38 @@ export class TilsDao {
       new GraphQLError('TIL 리스트 에러', ERROR.TIL('GET_TILS_ERROR'));
     }
   }
+
+  // TIL-Comment Update
+  async updateTilComment(til: TilCommentUpdateModel): Promise<boolean> {
+    const queryRunner = await this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.logger.verbose('Start transaction to update til-comment');
+      const updatedTil = await this.dataSource
+        .createQueryBuilder()
+        .update(TilComment)
+        .set({
+          til_comment: til.til_comment,
+        })
+        .where('id = :id', { id: til.TilId })
+        .execute();
+      this.logger.verbose('Success to update til-comment');
+      return updatedTil.affected ? true : false;
+    } catch (error) {
+      this.logger.error('Transaction ERROR');
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+      this.logger.verbose('Rollback transaction');
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.TIL('UPDATE TIL-COMMENT ERROR'),
+      );
+    } finally {
+      await queryRunner.release();
+      this.logger.verbose('Released transaction to update til-comment');
+    }
+  }
+  // TIL-Comment Delete
+  async deleteTilComment() {}
 }

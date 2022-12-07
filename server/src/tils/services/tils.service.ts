@@ -1,4 +1,3 @@
-import { PostsDao } from './../../posts/dao/posts.dao';
 import { UsersDao } from './../../users/dao/users.dao';
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
@@ -10,7 +9,7 @@ import { TilUpdateModel } from '../models/til.update.model';
 import { TilDeleteModel } from '../models/til.delete.modle';
 import { TilLimitedModel } from '../models/til.limited.model';
 import { returnDate } from 'src/common/functions/functions';
-import { TilCommentRegisterModel } from '../models/til.register-comment.model';
+import { TilCommentRegisterModel } from '../models/til-comment.register.model';
 import { TilComment } from 'src/common/databases/til-comments.entity';
 
 @Injectable()

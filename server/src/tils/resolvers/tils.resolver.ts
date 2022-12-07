@@ -1,4 +1,4 @@
-import { TilCommentRegisterModel } from './../models/til.register-comment.model';
+import { TilCommentRegisterModel } from '../models/til-comment.register.model';
 import { User } from 'src/common/databases/users.entity';
 import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
 import { UseGuards } from '@nestjs/common';

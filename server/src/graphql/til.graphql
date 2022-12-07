@@ -55,6 +55,17 @@ input RegisterTilComment {
   til_comment: String!
 }
 
+input UpdateTilComment {
+  TilId: ID!
+  CommentedUserId: Int!
+  til_comment: String!
+}
+
+input DeleteTilComment {
+  TilId: ID!
+  CommentedUserId: Int!
+}
+
 type Query {
   getTilsByUserId(UserId: Int!): [Til]
   getTilWithComment(tilId: ID!): [TilComment]
@@ -66,4 +77,6 @@ type Mutation {
   updateTil(til: UpdateTil!): Boolean!
   deleteTil(til: DeleteTil!): Boolean!
   registerTilComment(til: RegisterTilComment!): Boolean!
+  updateTilComment(til: UpdateTilComment!): Boolean!
+  deleteTilComment(til: DeleteTilComment!): Boolean!
 }
