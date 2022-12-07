@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Post } from './posts.entity';
+import { Til } from './tils.entity';
 
 @Entity('Calendar')
 export class Calendar {
@@ -18,13 +19,17 @@ export class Calendar {
   @IsNumber()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   @IsNumber()
   PostId: number;
 
   @Column({ nullable: false })
   @IsNumber()
   UserId: number;
+
+  @Column({ nullable: true })
+  @IsNumber()
+  TilId: number;
 
   @CreateDateColumn()
   @IsDate()
@@ -41,4 +46,8 @@ export class Calendar {
   @OneToOne(() => Post)
   @JoinColumn([{ name: 'PostId', referencedColumnName: 'id' }])
   post: Post;
+
+  @OneToOne(() => Til)
+  @JoinColumn([{ name: 'TilId', referencedColumnName: 'id' }])
+  til: Til;
 }
