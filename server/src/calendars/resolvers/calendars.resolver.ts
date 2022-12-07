@@ -29,6 +29,12 @@ export class CalendarsResolver {
     return await this.calendarsService.getCalendarsByDate(info);
   }
 
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async getAllPostsTils(@Args('UserId') UserId: number): Promise<Calendar[]> {
+    return await this.calendarsService.getAllPostsTils(UserId);
+  }
+
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async registerPostInCal(

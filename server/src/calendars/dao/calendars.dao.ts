@@ -11,6 +11,7 @@ export class CalendarsDao {
   private readonly logger = new Logger('CALENDAR-DB');
   constructor(private readonly dataSource: DataSource) {}
 
+  // Read Post - only one
   async checkPostInCal(info: CalRegisterModel): Promise<Calendar> {
     try {
       const isExistCal = await this.dataSource
@@ -30,6 +31,7 @@ export class CalendarsDao {
     }
   }
 
+  // Read Post - all by createdAt
   async getCalendarsByDate(info: CalendarsByDateModel): Promise<Calendar[]> {
     try {
       const date = info.date.split('.')[0].split(' ')[0];
@@ -51,6 +53,28 @@ export class CalendarsDao {
     }
   }
 
+  // Read Post & TIL - all
+  async getAllPostsTils(UserId: number): Promise<Calendar[]> {
+    try {
+      const tilsAndPosts = await this.dataSource
+        .getRepository(Calendar)
+        .createQueryBuilder('calendar')
+        .leftJoinAndSelect('calendar.post', 'post')
+        .leftJoinAndSelect('calendar.til', 'til')
+        .where('calendar.UserId = :UserId', { UserId })
+        .getMany();
+      return tilsAndPosts;
+    } catch (error) {
+      this.logger.error('CALENDAR READ TIL-POSTS ERROR');
+      console.error(error);
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.SERVER_ERROR('TIL, POST LIST ERROR'),
+      );
+    }
+  }
+
+  // all posts in Calendar
   async getAllPostsInCal(UserId: number): Promise<Calendar[]> {
     try {
       const calendars = await this.dataSource
