@@ -36,6 +36,16 @@ export class CalendarsService {
     return parsingData;
   }
 
+  async getAllPostsTils(UserId: number): Promise<Calendar[]> {
+    const isExistUser = await this.usersDao.getUserById(UserId);
+    if (!isExistUser) {
+      new GraphQLError('유효하지 않은 회원', ERROR.USER('유효하지 않은 회원'));
+    }
+    const tilsAndPosts = await this.calendarsDao.getAllPostsTils(UserId);
+    const parsingData = await returnDate(tilsAndPosts);
+    return parsingData;
+  }
+
   async registerPostInCal(info: CalRegisterModel): Promise<boolean | Error> {
     const isExistPost = await this.postsDao.getPostById(info.PostId);
     if (!isExistPost) {

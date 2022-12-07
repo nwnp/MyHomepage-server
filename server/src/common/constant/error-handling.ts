@@ -183,4 +183,12 @@ export const ERROR = {
       },
     };
   },
+  SERVER_ERROR(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
 };
