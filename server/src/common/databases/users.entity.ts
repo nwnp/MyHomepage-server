@@ -15,6 +15,7 @@ import { PostComment } from './post-comment.entity';
 import { Follow } from './follows.entity';
 import { Calendar } from './calendars.entity';
 import { Til } from './tils.entity';
+import { TilComment } from './til-comments.entity';
 
 @Entity('User')
 export class User {
@@ -106,4 +107,7 @@ export class User {
 
   @OneToMany(() => Til, (til) => til.user)
   tils: Til;
+
+  @OneToMany(() => TilComment, (tilComment) => tilComment.user)
+  tilComment: TilComment;
 }
