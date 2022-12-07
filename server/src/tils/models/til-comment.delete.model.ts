@@ -1,13 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class TilCommentUpdateModel {
+export class TilCommentDeleteModel {
   @Field(() => Int)
-  id: number; // Til-Comment id
+  id: number;
 
   @Field(() => Int)
   CommentedUserId: number;
-
-  @Field(() => Int)
-  til_comment: string;
 }

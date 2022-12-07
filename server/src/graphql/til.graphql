@@ -56,13 +56,13 @@ input RegisterTilComment {
 }
 
 input UpdateTilComment {
-  TilId: ID!
+  id: ID!
   CommentedUserId: Int!
   til_comment: String!
 }
 
 input DeleteTilComment {
-  TilId: ID!
+  id: ID!
   CommentedUserId: Int!
 }
 

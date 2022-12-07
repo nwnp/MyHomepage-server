@@ -6,11 +6,13 @@ import { Injectable } from '@nestjs/common';
 import { TilRegisterModel } from '../models/til.register.model';
 import { Til } from 'src/common/databases/tils.entity';
 import { TilUpdateModel } from '../models/til.update.model';
-import { TilDeleteModel } from '../models/til.delete.modle';
+import { TilDeleteModel } from '../models/til.delete.model';
 import { TilLimitedModel } from '../models/til.limited.model';
 import { returnDate } from 'src/common/functions/functions';
 import { TilCommentRegisterModel } from '../models/til-comment.register.model';
 import { TilComment } from 'src/common/databases/til-comments.entity';
+import { TilCommentUpdateModel } from '../models/til-comment.update.model';
+import { TilCommentDeleteModel } from '../models/til-comment.delete.model';
 
 @Injectable()
 export class TilsService {
@@ -117,5 +119,45 @@ export class TilsService {
       );
     }
     return await this.tilsDao.getTilWithComment(tilId);
+  }
+
+  // TIL-Comment Update
+  async updateTilComment(
+    til: TilCommentUpdateModel,
+    headerUserId: number,
+  ): Promise<boolean> {
+    if (headerUserId !== til.CommentedUserId)
+      throw new GraphQLError('BAD REQUEST', ERROR.TIL('INVALID_USER_ID'));
+
+    const isExistTil = await this.tilsDao.getTilById(til.id);
+    if (!isExistTil)
+      throw new GraphQLError('BAD REQUEST', ERROR.TIL('INVALID_TIL_ID'));
+
+    const { til_comment } = til;
+    if (til_comment.trim() === '' && til_comment.trim().length === 1)
+      throw new GraphQLError('BAD REQUEST', ERROR.TIL('BAD_BODY_DATA'));
+
+    return await this.tilsDao.updateTilComment(til);
+  }
+
+  // TIL-Comment Delete
+  async deleteTilComment(
+    til: TilCommentDeleteModel,
+    headerUserId: number,
+  ): Promise<boolean> {
+    if (headerUserId !== til.CommentedUserId)
+      throw new GraphQLError('BAD REQUEST', ERROR.TIL('INVALID_USER_ID'));
+
+    const isExistTilComment = await this.tilsDao.getTilCommentById(til.id);
+    if (!isExistTilComment) {
+      throw new GraphQLError(
+        'BAD REQUEST',
+        ERROR.TIL('INVALID_TIL-COMMENT_ID'),
+      );
+    }
+    if (isExistTilComment.CommentedUserId !== til.CommentedUserId) {
+      throw new GraphQLError('BAD REQUEST', ERROR.USER('INVALID_USER'));
+    }
+    return await this.tilsDao.deleteTilComment(til.id);
   }
 }

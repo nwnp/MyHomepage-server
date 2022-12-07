@@ -6,7 +6,7 @@ import { Til } from 'src/common/databases/tils.entity';
 import { Repository, DataSource } from 'typeorm';
 import { TilRegisterModel } from '../models/til.register.model';
 import { TilUpdateModel } from '../models/til.update.model';
-import { TilDeleteModel } from '../models/til.delete.modle';
+import { TilDeleteModel } from '../models/til.delete.model';
 import { TilLimitedModel } from '../models/til.limited.model';
 import { TilCommentRegisterModel } from '../models/til-comment.register.model';
 import { TilComment } from 'src/common/databases/til-comments.entity';
@@ -164,6 +164,25 @@ export class TilsDao {
     }
   }
 
+  // TIL-Comment Read
+  async getTilCommentById(commentId: number): Promise<TilComment> {
+    try {
+      const tilComment = await this.dataSource
+        .getRepository(TilComment)
+        .createQueryBuilder('tilComment')
+        .where('tilComment.id = :id', { id: commentId })
+        .getOne();
+      return tilComment;
+    } catch (error) {
+      this.logger.error('GET TIL-COMMENT ERROR');
+      console.error(error);
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.TIL('GET_TIL-COMMENT_ERROR'),
+      );
+    }
+  }
+
   // TIL-Comment Create
   async registerTilComment(til: TilCommentRegisterModel): Promise<boolean> {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -219,21 +238,21 @@ export class TilsDao {
 
   // TIL-Comment Update
   async updateTilComment(til: TilCommentUpdateModel): Promise<boolean> {
-    const queryRunner = await this.dataSource.createQueryRunner();
+    const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
       this.logger.verbose('Start transaction to update til-comment');
-      const updatedTil = await this.dataSource
+      const updatedTilComment = await this.dataSource
         .createQueryBuilder()
         .update(TilComment)
         .set({
           til_comment: til.til_comment,
         })
-        .where('id = :id', { id: til.TilId })
+        .where('id = :id', { id: til.id })
         .execute();
       this.logger.verbose('Success to update til-comment');
-      return updatedTil.affected ? true : false;
+      return updatedTilComment.affected ? true : false;
     } catch (error) {
       this.logger.error('Transaction ERROR');
       console.error(error);
@@ -249,5 +268,33 @@ export class TilsDao {
     }
   }
   // TIL-Comment Delete
-  async deleteTilComment() {}
+  async deleteTilComment(commentId: number): Promise<boolean> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.logger.verbose('Start transactio to delete til-comment');
+      const deletedTilComment = await this.dataSource
+        .createQueryBuilder()
+        .delete()
+        .from(TilComment)
+        .where('id = :id', { id: commentId })
+        .execute();
+      this.logger.verbose('Success transaction to delete til-comment');
+      await queryRunner.commitTransaction();
+      return deletedTilComment.affected ? true : false;
+    } catch (error) {
+      this.logger.error('Transaction ERROR');
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+      this.logger.verbose('Rollback Transaction');
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.TIL('DELETE_TIL_COMMENT ERROR'),
+      );
+    } finally {
+      await queryRunner.release();
+      this.logger.verbose('Released transaction to delete til-comment');
+    }
+  }
 }

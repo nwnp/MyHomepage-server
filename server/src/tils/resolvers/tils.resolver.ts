@@ -8,9 +8,11 @@ import { TilRegisterModel } from '../models/til.register.model';
 import { CurrentUser } from 'src/common/functions/current.user';
 import { Til } from 'src/common/databases/tils.entity';
 import { TilUpdateModel } from '../models/til.update.model';
-import { TilDeleteModel } from '../models/til.delete.modle';
+import { TilDeleteModel } from '../models/til.delete.model';
 import { TilLimitedModel } from '../models/til.limited.model';
 import { TilComment } from 'src/common/databases/til-comments.entity';
+import { TilCommentUpdateModel } from '../models/til-comment.update.model';
+import { TilCommentDeleteModel } from '../models/til-comment.delete.model';
 
 @Resolver()
 export class TilsResolver {
@@ -71,5 +73,23 @@ export class TilsResolver {
     @CurrentUser() user: User,
   ): Promise<boolean> {
     return await this.tilsService.registerTilComment(til, user.id);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async updateTilComment(
+    @Args('til') til: TilCommentUpdateModel,
+    @CurrentUser() user: User,
+  ): Promise<boolean> {
+    return await this.tilsService.updateTilComment(til, user.id);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async deleteTilComment(
+    @Args('til') til: TilCommentDeleteModel,
+    @CurrentUser() user: User,
+  ): Promise<boolean> {
+    return await this.tilsService.deleteTilComment(til, user.id);
   }
 }
