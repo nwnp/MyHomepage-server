@@ -5,9 +5,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { TilComment } from './til-comments.entity';
 import { User } from './users.entity';
 
 @Entity('Til')
@@ -44,4 +46,7 @@ export class Til {
   @ManyToOne(() => User, (user) => user.tils)
   @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
   user: User;
+
+  @OneToMany(() => TilComment, (tilComment) => tilComment.til)
+  tilComment: TilComment;
 }

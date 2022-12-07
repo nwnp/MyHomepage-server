@@ -109,7 +109,7 @@ export class PostsService {
 
     const isExistPost = await this.postsDao.getPostById(post.PostId);
     if (!isExistPost)
-      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
+      return new GraphQLError('유효하지 않은 게시글', ERROR.INVALID_USER);
 
     const isPostComment = await this.postsDao.getPostCommentById(
       post.commentId,
