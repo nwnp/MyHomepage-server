@@ -1,0 +1,10 @@
+input Mail {
+  to: String!
+  from: String!
+  subject: String!
+  text: String!
+}
+
+type Mutation {
+  sendMail(mail: Mail!): Boolean!
+}

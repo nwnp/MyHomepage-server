@@ -12,7 +12,7 @@ async function start() {
 
   await app.listen(PORT, () => {
     const logger = new Logger('MAIN');
-    logger.log(`The server is running at ${PORT}`);
+    logger.verbose(`The server is running at ${PORT}`);
   });
 }
 

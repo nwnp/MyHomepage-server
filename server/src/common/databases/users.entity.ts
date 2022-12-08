@@ -16,6 +16,7 @@ import { Follow } from './follows.entity';
 import { Calendar } from './calendars.entity';
 import { Til } from './tils.entity';
 import { TilComment } from './til-comments.entity';
+import { Email } from './emails.entity';
 
 @Entity('User')
 export class User {
@@ -101,6 +102,12 @@ export class User {
 
   @OneToMany(() => Follow, (follow) => follow.followers)
   followers: Follow;
+
+  @OneToMany(() => Email, (mail) => mail.mailTo)
+  mailTo: Email;
+
+  @OneToMany(() => Email, (mail) => mail.mailFrom)
+  mailFrom: Email;
 
   @OneToMany(() => Calendar, (calendar) => calendar.user)
   calendars: Calendar;
