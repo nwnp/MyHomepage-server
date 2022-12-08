@@ -22,10 +22,27 @@ import { Calendar } from 'src/common/databases/calendars.entity';
 import { Til } from 'src/common/databases/tils.entity';
 import { TilsModule } from 'src/tils/tils.module';
 import { TilComment } from 'src/common/databases/til-comments.entity';
+import { Email } from 'src/common/databases/emails.entity';
+import { EmailsModule } from 'src/emails/emails.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 587,
+        },
+        auth: {
+          user: 'ujmn0418@gmail.com',
+          pass: 'googlednwjdwls1!@AS',
+        },
+        preview: true,
+      }),
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -44,6 +61,7 @@ import { TilComment } from 'src/common/databases/til-comments.entity';
         Calendar,
         Til,
         TilComment,
+        Email,
       ],
       synchronize: true,
     }),
@@ -66,6 +84,7 @@ import { TilComment } from 'src/common/databases/til-comments.entity';
     FollowsModule,
     CalendarsModule,
     TilsModule,
+    EmailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -191,4 +191,12 @@ export const ERROR = {
       },
     };
   },
+  MAILER(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
 };
