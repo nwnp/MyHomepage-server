@@ -7,5 +7,4 @@ export type FollowsForLogin = {
 };
 
 export type FollowListType = 'followingMe' | 'imFollowing';
-
 export type IteratorType = string[] | Calendar[] | Til[];

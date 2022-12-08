@@ -1,4 +1,5 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { IsOptional } from 'class-validator';
 
 @ObjectType()
 export class CommentRegisterModel {
@@ -7,4 +8,8 @@ export class CommentRegisterModel {
 
   @Field(() => ID)
   UserId: number;
+
+  @Field(() => Int)
+  @IsOptional()
+  secret: number;
 }

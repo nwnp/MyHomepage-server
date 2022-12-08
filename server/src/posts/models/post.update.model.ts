@@ -13,4 +13,7 @@ export class PostUpdateModel {
 
   @Field(() => Int)
   PostId: number;
+
+  @Field(() => Int)
+  UserId: number;
 }
