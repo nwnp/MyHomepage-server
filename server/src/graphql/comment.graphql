@@ -20,20 +20,28 @@ type Comment {
 
 input CommentInput {
   comment: String!
-  UserId: ID!
+  UserId: ID! # comment의 주인
+  secret: Int
 }
 
 input CommentUpdate {
+  id: ID! # comment id
   comment: String!
+  UserId: Int! # comment page의 user id
+  CommentedUserId: Int! # 댓글 단 user id
+}
+
+input CommentDelete {
   id: ID!
+  commentedUserId: ID!
 }
 
 type Query {
-  getComments: [Comment]
+  getComments(id: ID!): [Comment] # id = user id
 }
 
 type Mutation {
   registerComment(commentInfo: CommentInput!): Boolean!
   updateComment(commentInfo: CommentUpdate!): Boolean!
-  deleteComment(commentId: ID!): Boolean!
+  deleteComment(commentInfo: CommentDelete!): Boolean!
 }

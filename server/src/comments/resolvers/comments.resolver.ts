@@ -23,8 +23,8 @@ export class CommentsResolver {
 
   @Query(() => [Comment])
   @UseGuards(GqlAuthGuard)
-  async getComments(@CurrentUser() user: User): Promise<Comment[] | Error> {
-    return await this.commentsService.getComments(user.id);
+  async getComments(@Args('id') id: number): Promise<Comment[] | Error> {
+    return await this.commentsService.getComments(id);
   }
 
   @Mutation(() => Boolean)

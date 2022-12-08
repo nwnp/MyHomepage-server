@@ -20,6 +20,7 @@ export class CommentsService {
   ): Promise<boolean | Error> {
     if (info.UserId == commentedUserId)
       return new GraphQLError('본인 방명록 등록 에러');
+
     return await this.commentsDao.registerComment(info, commentedUserId);
   }
 
@@ -31,7 +32,10 @@ export class CommentsService {
     if (!isExistComment)
       return new GraphQLError('SERVER ERROR', ERROR.INVALID_COMMENT_ERROR);
 
-    if (commentedUserId != isExistComment.CommentedUserId)
+    if (commentedUserId !== comment.CommentedUserId)
+      return new GraphQLError('INVALID USER', ERROR.INVALID_USER);
+
+    if (comment.CommentedUserId != isExistComment.CommentedUserId)
       return new GraphQLError('INVALID USER', ERROR.INVALID_USER);
 
     return await this.commentsDao.updateComment(comment);
