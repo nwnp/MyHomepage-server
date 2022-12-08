@@ -1,12 +1,9 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class PostCommentRegisterModel {
+export class LimitedPostsModel {
   @Field(() => Int)
-  PostId: number;
-
-  @Field(() => String)
-  comment: string;
+  count: number;
 
   @Field(() => Int)
   UserId: number;

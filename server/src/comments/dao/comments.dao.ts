@@ -47,6 +47,7 @@ export class CommentsDao {
           comment: info.comment,
           UserId: info.UserId,
           CommentedUserId: commentedUserId,
+          secret: info.secret,
         })
         .execute();
       const result = newComment.raw.affectedRows ? true : false;
@@ -64,6 +65,7 @@ export class CommentsDao {
     }
   }
 
+  // 방명록 페이지의 userId를 받고 Read
   async getComments(UserId: number): Promise<Comment[] | Error> {
     try {
       const commentsWithUser = await this.dataSource

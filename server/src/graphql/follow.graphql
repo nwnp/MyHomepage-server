@@ -33,9 +33,14 @@ type Following {
   followers: User
 }
 
+input FollowList {
+  type: String!
+  userId: Int!
+}
+
 type Query {
-  followsForLogin: FollowCount! # count만 return
-  followList(type: String!): [Following] # 나를 팔로우하고 있는 user list API
+  followsForLogin(id: ID!): FollowCount! # count만 return
+  followList(info: FollowList!): [Following] # 나를 팔로우하고 있는 user list API
 }
 
 type Mutation {
