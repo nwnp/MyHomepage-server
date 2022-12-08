@@ -27,29 +27,41 @@ type PostComment {
 }
 
 type Query {
-  getPostsByUserId: [Post]
-  getPostWithComment(postId: ID!): [PostComment]!
-  getLimitedPosts(count: Int!): [Post]
+  getPostsByUserId(id: ID!): [Post]
+  getPostWithComment(info: PostWithComment!): [PostComment]!
+  getLimitedPosts(post: LimitedPosts!): [Post]
 }
 
 type Mutation {
   registerPost(post: Register!): Post!
   updatePost(post: Update!): Boolean!
-  deletePost(postId: ID!): Boolean!
+  deletePost(post: Delete!): Boolean!
   registerPostComment(post: PostCommentRegister!): Boolean!
   updatePostComment(post: PostCommentUpdate!): Boolean!
   deletePostComment(post: PostCommentDelete!): Boolean!
 }
 
+input PostWithComment {
+  UserId: Int!
+  PostId: Int!
+}
+
 input Register {
   title: String!
   content: String!
+  UserId: Int!
+}
+
+input Delete {
+  UserId: Int!
+  postId: ID!
 }
 
 input Update {
   PostId: ID!
   title: String
   content: String
+  UserId: Int
 }
 
 input PostCommentRegister {
@@ -66,4 +78,9 @@ input PostCommentUpdate {
 input PostCommentDelete {
   PostId: ID!
   commentId: ID!
+}
+
+input LimitedPosts {
+  count: Int!
+  UserId: ID!
 }

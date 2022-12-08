@@ -7,8 +7,10 @@ import { PostRegisterModel } from '../models/post.register.model';
 import { PostUpdateModel } from '../models/post.update.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostComment } from 'src/common/databases/post-comment.entity';
+import { PostCommentsModel } from '../models/post.comments.model';
 import { PostCommentUpdateModel } from '../models/post-comment.update.model';
 import { PostCommentRegisterModel } from '../models/post-comment.register.model';
+import { LimitedPostsModel } from '../models/limited.post.model';
 
 @Injectable()
 export class PostsDao {
@@ -43,14 +45,16 @@ export class PostsDao {
     }
   }
 
-  async getPostWithComment(postId: number): Promise<PostComment[] | Error> {
+  async getPostWithComment(
+    info: PostCommentsModel,
+  ): Promise<PostComment[] | Error> {
     try {
       const post = await this.dataSource
         .getRepository(PostComment)
         .createQueryBuilder('postComment')
         .leftJoinAndSelect('postComment.post', 'post')
         .leftJoinAndSelect('postComment.user', 'user')
-        .where('postComment.PostId = :id', { id: postId })
+        .where('postComment.PostId = :id', { id: ~~info.PostId })
         .getMany();
       return post;
     } catch (error) {
@@ -60,15 +64,15 @@ export class PostsDao {
     }
   }
 
-  async getLimitedPosts(count: number, userId: number): Promise<Post[]> {
+  async getLimitedPosts(post: LimitedPostsModel): Promise<Post[]> {
     try {
       const posts = await this.dataSource
         .getRepository(Post)
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.user', 'user')
-        .where('post.UserId = :UserId', { UserId: userId })
+        .where('post.UserId = :UserId', { UserId: post.UserId })
         .orderBy('post.id', 'DESC')
-        .limit(count)
+        .limit(post.count)
         .getMany();
       return posts;
     } catch (error) {
@@ -109,7 +113,6 @@ export class PostsDao {
 
   async registerPostComment(
     info: PostCommentRegisterModel,
-    userId: number,
   ): Promise<boolean | Error> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -122,7 +125,7 @@ export class PostsDao {
         .into(PostComment)
         .values({
           post_comment: info.comment,
-          CommentedUserId: userId,
+          CommentedUserId: info.UserId,
           PostId: info.PostId,
         })
         .execute();
@@ -191,7 +194,7 @@ export class PostsDao {
     }
   }
 
-  async registerPost(post: PostRegisterModel, userId: number): Promise<any> {
+  async register(post: PostRegisterModel): Promise<any> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -202,7 +205,7 @@ export class PostsDao {
         .insert()
         .into(Post)
         .values({
-          UserId: userId,
+          UserId: post.UserId,
           title: post.title,
           content: post.content,
         })
@@ -221,7 +224,7 @@ export class PostsDao {
     }
   }
 
-  async updatePost(post: PostUpdateModel): Promise<boolean | Error> {
+  async update(post: PostUpdateModel): Promise<boolean | Error> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -251,7 +254,7 @@ export class PostsDao {
     }
   }
 
-  async deletePost(id: number): Promise<boolean | Error> {
+  async delete(id: number): Promise<boolean | Error> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -263,10 +266,9 @@ export class PostsDao {
         .from(Post)
         .where('id = :id', { id })
         .execute();
-      if (deletedPost.affected) {
-        await queryRunner.commitTransaction();
-        return true;
-      } else return false;
+      await queryRunner.commitTransaction();
+      this.logger.verbose('Success transaction to delete post');
+      return deletedPost.affected ? true : false;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       this.logger.error('Transaction ERROR');

@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class PostRegisterModel {
@@ -7,4 +7,7 @@ export class PostRegisterModel {
 
   @Field(() => String)
   content: string;
+
+  @Field(() => Int)
+  UserId: number;
 }

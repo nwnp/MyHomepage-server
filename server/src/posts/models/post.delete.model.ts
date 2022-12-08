@@ -1,13 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class PostCommentDeleteModel {
-  @Field(() => Int)
-  PostId: number;
-
+export class PostDeleteModel {
   @Field(() => Int)
   UserId: number;
 
   @Field(() => Int)
-  commentId: number;
+  postId: number;
 }
