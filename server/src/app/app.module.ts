@@ -37,8 +37,8 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
           port: 587,
         },
         auth: {
-          user: 'ujmn0418@gmail.com',
-          pass: 'googlednwjdwls1!@AS',
+          user: '',
+          pass: '',
         },
         preview: true,
       }),
