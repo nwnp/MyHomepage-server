@@ -11,7 +11,7 @@ type User {
 type Til {
   id: ID!
   title: String
-  til_comment: String
+  til_content: String
   createdAt: String
   udpatedAt: String
   UserId: Int!
@@ -19,7 +19,7 @@ type Til {
 
 type TilComment {
   id: ID!
-  til_comment: String!
+  til_comment: String
   CommentedUserId: Int!
   createdAt: String!
   user: User!
@@ -28,7 +28,7 @@ type TilComment {
 
 input RegisterTil {
   title: String
-  til_content: String!
+  til_content: String
   UserId: Int!
 }
 
@@ -52,13 +52,13 @@ input LimitedTils {
 input RegisterTilComment {
   TilId: ID!
   UserId: Int!
-  til_comment: String!
+  til_comment: String
 }
 
 input UpdateTilComment {
   id: ID!
   CommentedUserId: Int!
-  til_comment: String!
+  til_comment: String
 }
 
 input DeleteTilComment {

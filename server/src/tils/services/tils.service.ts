@@ -129,10 +129,6 @@ export class TilsService {
     if (headerUserId !== til.CommentedUserId)
       throw new GraphQLError('BAD REQUEST', ERROR.TIL('INVALID_USER_ID'));
 
-    const isExistTil = await this.tilsDao.getTilById(til.id);
-    if (!isExistTil)
-      throw new GraphQLError('BAD REQUEST', ERROR.TIL('INVALID_TIL_ID'));
-
     const { til_comment } = til;
     if (til_comment.trim() === '' && til_comment.trim().length === 1)
       throw new GraphQLError('BAD REQUEST', ERROR.TIL('BAD_BODY_DATA'));

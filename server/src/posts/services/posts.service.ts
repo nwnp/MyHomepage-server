@@ -111,9 +111,6 @@ export class PostsService {
     if (!isPostComment)
       return new GraphQLError('유효하지 않은 댓글', ERROR.GET_POST_COMMENT);
 
-    if (isPostComment.CommentedUserId != post.UserId)
-      return new GraphQLError('유효하지 않은 회원', ERROR.INVALID_USER);
-
     return await this.postsDao.deletePostComment(post.commentId);
   }
 
