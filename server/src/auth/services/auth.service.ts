@@ -5,7 +5,8 @@ import { UsersDao } from './../../users/dao/users.dao';
 import { Injectable } from '@nestjs/common';
 import { UserLoginInput } from 'src/users/models/user.login.model';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
