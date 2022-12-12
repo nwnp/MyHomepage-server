@@ -47,6 +47,13 @@ export class User {
   nickname: string;
 
   @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  @IsString()
+  name: string;
+
+  @Column({
     nullable: true,
     default: 'male',
   })
