@@ -66,6 +66,7 @@ input Update {
 
 input PostCommentRegister {
   PostId: ID!
+  UserId: Int!
   comment: String!
 }
 

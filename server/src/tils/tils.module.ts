@@ -6,9 +6,14 @@ import { Til } from 'src/common/databases/tils.entity';
 import { UsersModule } from 'src/users/users.module';
 import { TilsDao } from './dao/tils.dao';
 import { TilComment } from 'src/common/databases/til-comments.entity';
+import { CalendarsModule } from 'src/calendars/calendars.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Til, TilComment]), UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([Til, TilComment]),
+    UsersModule,
+    CalendarsModule,
+  ],
   providers: [TilsService, TilsResolver, TilsDao],
   exports: [TilsDao],
 })

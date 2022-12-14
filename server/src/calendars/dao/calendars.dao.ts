@@ -11,6 +11,34 @@ export class CalendarsDao {
   private readonly logger = new Logger('CALENDAR-DB');
   constructor(private readonly dataSource: DataSource) {}
 
+  async deleteByPostId(PostId: number) {
+    try {
+      await this.dataSource
+        .createQueryBuilder()
+        .delete()
+        .from(Calendar)
+        .where('PostId = :PostId', { PostId })
+        .execute();
+    } catch (error) {
+      console.log(error);
+      throw new GraphQLError('DELETE BY POST_ID ERROR');
+    }
+  }
+
+  async deleteByTilId(TilId: number) {
+    try {
+      await this.dataSource
+        .createQueryBuilder()
+        .delete()
+        .from(Calendar)
+        .where('TilId = :TilId', { TilId })
+        .execute();
+    } catch (error) {
+      console.log(error);
+      throw new GraphQLError('DELETE BY TIL_ID ERROR');
+    }
+  }
+
   // Read Post - only one
   async checkPostInCal(info: CalRegisterModel): Promise<Calendar> {
     try {
