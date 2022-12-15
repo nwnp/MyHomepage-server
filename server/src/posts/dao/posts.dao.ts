@@ -1,3 +1,4 @@
+import { CalendarsDao } from './../../calendars/dao/calendars.dao';
 import { Post } from './../../common/databases/posts.entity';
 import { ERROR } from './../../common/constant/error-handling';
 import { GraphQLError } from 'graphql';
@@ -20,6 +21,7 @@ export class PostsDao {
     @InjectRepository(PostComment)
     private readonly postCommentRepository: Repository<PostComment>,
     private readonly dataSource: DataSource,
+    private readonly calendarsDao: CalendarsDao,
   ) {}
 
   async getPostById(id: number): Promise<Post> {
@@ -176,6 +178,20 @@ export class PostsDao {
     }
   }
 
+  async deleteAllPostCommentById(PostId: number): Promise<boolean> {
+    try {
+      const deleted = await this.dataSource
+        .createQueryBuilder()
+        .delete()
+        .from(PostComment)
+        .where('PostId = :PostId', { PostId })
+        .execute();
+      return deleted.affected ? true : false;
+    } catch (error) {
+      throw new GraphQLError('ALL DELETE POST-COMMENT ERROR');
+    }
+  }
+
   async getPostsByUserId(UserId: number): Promise<Post[]> {
     try {
       const posts = await this.dataSource
@@ -260,6 +276,8 @@ export class PostsDao {
     await queryRunner.startTransaction();
     try {
       this.logger.verbose('Start transaction to delete post');
+      await this.deleteAllPostCommentById(id);
+      await this.calendarsDao.deleteByPostId(id);
       const deletedPost = await this.dataSource
         .createQueryBuilder()
         .delete()
@@ -267,7 +285,6 @@ export class PostsDao {
         .where('id = :id', { id })
         .execute();
       await queryRunner.commitTransaction();
-      this.logger.verbose('Success transaction to delete post');
       return deletedPost.affected ? true : false;
     } catch (error) {
       await queryRunner.rollbackTransaction();

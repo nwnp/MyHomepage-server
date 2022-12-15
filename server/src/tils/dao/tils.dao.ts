@@ -1,3 +1,4 @@
+import { CalendarsDao } from './../../calendars/dao/calendars.dao';
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +19,22 @@ export class TilsDao {
   constructor(
     @InjectRepository(Til) private readonly tilsRepository: Repository<Til>,
     private readonly dataSource: DataSource,
+    private readonly calendarsDao: CalendarsDao,
   ) {}
+
+  async deleteAllTilCommentById(TilId: number): Promise<boolean> {
+    try {
+      const deleted = await this.dataSource
+        .createQueryBuilder()
+        .delete()
+        .from(TilComment)
+        .where('TilId = :TilId', { TilId })
+        .execute();
+      return deleted.affected ? true : false;
+    } catch (error) {
+      throw new GraphQLError('ALL DELETE POST-COMMENT ERROR');
+    }
+  }
 
   // TIL Read ➡️ all
   async getTilsByUserId(UserId: number): Promise<Til[]> {
@@ -144,6 +160,8 @@ export class TilsDao {
     await queryRunner.startTransaction();
     try {
       this.logger.verbose('Start transaction to delete til');
+      await this.calendarsDao.deleteByTilId(til.tilId);
+      await this.deleteAllTilCommentById(til.tilId);
       const deletedTil = await this.dataSource
         .createQueryBuilder()
         .delete()

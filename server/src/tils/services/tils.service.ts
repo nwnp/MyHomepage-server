@@ -23,8 +23,6 @@ export class TilsService {
 
   // TIL Read ➡️ all
   async getTilsByUserId(UserId: number, headerUserId: number): Promise<Til[]> {
-    if (UserId !== headerUserId)
-      throw new GraphQLError('유효하지 않은 회원', ERROR.USER('INVALID_USER'));
     const tils = await this.tilsDao.getTilsByUserId(UserId);
     return await returnDate(tils);
   }
