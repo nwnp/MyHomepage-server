@@ -36,8 +36,8 @@ jobs:
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
-          username: ${{ secrets.AWS_USERNAME }}
           host: ${{ secrets.HOST }}
+          username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
           source: 'docker-compose.yaml'
