@@ -1,5 +1,5 @@
 name: Backend CI/CD Pipeline 🚀
-run-name: Backend CI/CD pipeline 🚀
+
 on:
   push:
     branches:
