@@ -4,4 +4,4 @@ services:
   backend:
     image: kikeea/mypage-server:latest
     ports:
-      - 3000:3000
+      - '3000:3000'
