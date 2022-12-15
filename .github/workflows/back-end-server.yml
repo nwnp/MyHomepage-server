@@ -27,7 +27,6 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker-build.outputs.digest}}
       - run: echo "Backend CI pipeline start 🚀"
-
   cd-pipeline:
     needs: ci-pipeline
     name: continuous deploy
