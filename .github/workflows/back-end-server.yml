@@ -1,5 +1,5 @@
 name: Backend CI Pipeline
-run-name: ${{ github.actor }} is testing CI pipeline 🚀
+run-name: ${{ github.actor }} is Backend CI pipeline 🚀
 on:
   push:
     branches:
@@ -15,7 +15,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and Push
         id: docker-build
-        uses: docker/build-push-actions@v2
+        uses: docker/build-push-action@v2
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/mypage-server:latest
