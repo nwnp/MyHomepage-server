@@ -45,11 +45,23 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3305,
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_SCHEMA,
+      host:
+        process.env.NODE_ENV === 'production'
+          ? process.env.RDS_ENDPOINT
+          : 'localhost',
+      port: process.env.NODE_ENV === 'production' ? 3306 : 3305,
+      username:
+        process.env.NODE_ENV === 'production'
+          ? process.env.RDS_USER
+          : process.env.DB_USER,
+      password:
+        process.env.NODE_ENV === 'production'
+          ? process.env.RDS_PASSWORD
+          : process.env.DB_PASSWORD,
+      database:
+        process.env.NODE_ENV === 'production'
+          ? process.env.RDS_SCHEMA
+          : process.env.DB_SCHEMA,
       entities: [
         User,
         Post,
@@ -68,12 +80,13 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       debug: false,
-      playground: true,
+      playground: process.env.NODE_ENV === 'production' ? false : true,
       typePaths: ['./**/*.graphql'],
       cors: {
         origin: [
-          'http://localhost:8081',
-          'http://my-sideproject.s3-website.ap-northeast-2.amazonaws.com',
+          process.env.NODE_ENV === 'production'
+            ? 'https://my-page.co.kr'
+            : 'http://localhost:8081',
         ],
         credentials: true,
       },
