@@ -38,7 +38,43 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ec2-user
-          key: ${{ secrets.PRIVATE_KEY }}
+          key:
+            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
           port: 22
           source: 'docker-compose.yaml'
           target: '/home/ec2-user/'
