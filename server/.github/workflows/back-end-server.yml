@@ -1,4 +1,4 @@
-name: ci pipeline
+name: Backend CI Pipeline
 run-name: ${{ github.actor }} is testing CI pipeline 🚀
 on:
   push:
