@@ -1,5 +1,4 @@
 name: Backend CI/CD Pipeline 🚀
-
 on:
   push:
     branches:
@@ -26,7 +25,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/mypage-server:latest
       - name: Image digest
         run: echo ${{ steps.docker-build.outputs.digest}}
-      - run: echo "Backend CI pipeline start 🚀"
+      - name: CI pipeline result
+        run: echo "✅ Success image build ✅"
   cd-pipeline:
     needs: ci-pipeline
     name: continuous deploy
@@ -50,3 +50,5 @@ jobs:
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
           script: 'docker-compose pull && docker-compose up -d'
+      - name: CD pipeline result
+        run: echo "✅ Success CI pipeline ✅"
