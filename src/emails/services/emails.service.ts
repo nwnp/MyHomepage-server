@@ -1,7 +1,7 @@
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
-import { MailerModel } from './../models/mailer.model';
-import { EmailDao } from './../dao/email.dao';
+import { MailerModel } from '../models/mailer.model';
+import { EmailDao } from '../dao/email.dao';
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 

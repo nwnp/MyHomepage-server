@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { UsersDao } from './../users/dao/users.dao';
+import { UsersDao } from '../users/dao/users.dao';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';

@@ -1,8 +1,8 @@
 import { TilCommentRegisterModel } from '../models/til-comment.register.model';
 import { User } from 'src/common/databases/users.entity';
-import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
+import { GqlAuthGuard } from '../../auth/guard/gql.auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { TilsService } from './../services/tils.service';
+import { TilsService } from '../services/tils.service';
 import { Mutation, Resolver, Args, Query } from '@nestjs/graphql';
 import { TilRegisterModel } from '../models/til.register.model';
 import { CurrentUser } from 'src/common/functions/current.user';

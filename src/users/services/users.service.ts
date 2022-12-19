@@ -1,5 +1,5 @@
-import { UserSignupModel } from './../models/user.signup.model';
-import { ERROR } from './../../common/constant/error-handling';
+import { UserSignupModel } from '../models/user.signup.model';
+import { ERROR } from '../../common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { Injectable } from '@nestjs/common';
 import { UsersDao } from '../dao/users.dao';

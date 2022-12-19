@@ -1,4 +1,4 @@
-import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
+import { GqlAuthGuard } from '../../auth/guard/gql.auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { CalendarsService } from '../services/calendars.service';

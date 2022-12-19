@@ -1,8 +1,8 @@
-import { FollowListModel } from './../models/follow.list.model';
+import { FollowListModel } from '../models/follow.list.model';
 import { ERROR } from 'src/common/constant/error-handling';
 import { User } from 'src/common/databases/users.entity';
-import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
-import { FollowsService } from './../services/follows.service';
+import { GqlAuthGuard } from '../../auth/guard/gql.auth.guard';
+import { FollowsService } from '../services/follows.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/common/functions/current.user';

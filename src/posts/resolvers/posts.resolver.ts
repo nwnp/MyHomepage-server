@@ -1,5 +1,5 @@
-import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
-import { PostsService } from './../services/posts.service';
+import { GqlAuthGuard } from '../../auth/guard/gql.auth.guard';
+import { PostsService } from '../services/posts.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Post } from 'src/common/databases/posts.entity';

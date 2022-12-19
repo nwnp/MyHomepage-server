@@ -1,5 +1,5 @@
-import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
-import { CommentsService } from './../services/comments.service';
+import { GqlAuthGuard } from '../../auth/guard/gql.auth.guard';
+import { CommentsService } from '../services/comments.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { CommentRegisterModel } from '../models/comment.register.model';

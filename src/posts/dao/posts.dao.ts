@@ -1,6 +1,6 @@
-import { CalendarsDao } from './../../calendars/dao/calendars.dao';
-import { Post } from './../../common/databases/posts.entity';
-import { ERROR } from './../../common/constant/error-handling';
+import { CalendarsDao } from '../../calendars/dao/calendars.dao';
+import { Post } from '../../common/databases/posts.entity';
+import { ERROR } from '../../common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';

@@ -1,4 +1,4 @@
-import { CommentsModule } from './../comments/comments.module';
+import { CommentsModule } from '../comments/comments.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';

@@ -1,7 +1,7 @@
-import { UsersDao } from './../../users/dao/users.dao';
+import { UsersDao } from '../../users/dao/users.dao';
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
-import { TilsDao } from './../dao/tils.dao';
+import { TilsDao } from '../dao/tils.dao';
 import { Injectable } from '@nestjs/common';
 import { TilRegisterModel } from '../models/til.register.model';
 import { Til } from 'src/common/databases/tils.entity';

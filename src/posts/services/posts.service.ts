@@ -1,5 +1,5 @@
-import { UsersDao } from './../../users/dao/users.dao';
-import { ERROR } from './../../common/constant/error-handling';
+import { UsersDao } from '../../users/dao/users.dao';
+import { ERROR } from '../../common/constant/error-handling';
 import { Injectable } from '@nestjs/common';
 import { Post } from 'src/common/databases/posts.entity';
 import { PostsDao } from '../dao/posts.dao';

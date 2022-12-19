@@ -1,7 +1,7 @@
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
-import { CommentRegisterModel } from './../models/comment.register.model';
-import { CommentsDao } from './../dao/comments.dao';
+import { CommentRegisterModel } from '../models/comment.register.model';
+import { CommentsDao } from '../dao/comments.dao';
 import { Injectable } from '@nestjs/common';
 import { Comment } from 'src/common/databases/comment.entity';
 import { CommentUpdateModel } from '../models/comment.update.model';

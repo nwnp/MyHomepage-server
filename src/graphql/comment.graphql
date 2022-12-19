@@ -13,7 +13,7 @@ type Comment {
   id: ID!
   comment: String!
   UserId: String!
-  commentedUserId: String!
+  CommentedUserId: String!
   user: User
   secret: Int
 }

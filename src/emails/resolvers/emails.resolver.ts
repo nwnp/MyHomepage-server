@@ -1,7 +1,7 @@
-import { MailerModel } from './../models/mailer.model';
-import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
+import { MailerModel } from '../models/mailer.model';
+import { GqlAuthGuard } from '../../auth/guard/gql.auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { EmailsService } from './../services/emails.service';
+import { EmailsService } from '../services/emails.service';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 @Resolver()

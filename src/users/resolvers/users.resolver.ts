@@ -1,5 +1,5 @@
-import { GqlAuthGuard } from './../../auth/guard/gql.auth.guard';
-import { AuthService } from './../../auth/services/auth.service';
+import { GqlAuthGuard } from '../../auth/guard/gql.auth.guard';
+import { AuthService } from '../../auth/services/auth.service';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserSignupModel } from '../models/user.signup.model';
 import { User } from 'src/common/databases/users.entity';

@@ -1,4 +1,4 @@
-import { CalendarsByDateModel } from './../models/calendars.list.model';
+import { CalendarsByDateModel } from '../models/calendars.list.model';
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { DataSource } from 'typeorm';

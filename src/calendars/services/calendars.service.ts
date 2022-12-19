@@ -1,10 +1,10 @@
-import { returnDate } from './../../common/functions/functions';
+import { returnDate } from '../../common/functions/functions';
 import { Calendar } from 'src/common/databases/calendars.entity';
-import { UsersDao } from './../../users/dao/users.dao';
+import { UsersDao } from '../../users/dao/users.dao';
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
-import { PostsDao } from './../../posts/dao/posts.dao';
-import { CalendarsDao } from './../dao/calendars.dao';
+import { PostsDao } from '../../posts/dao/posts.dao';
+import { CalendarsDao } from '../dao/calendars.dao';
 import { Injectable } from '@nestjs/common';
 import { CalRegisterModel } from '../models/calendar.register.model';
 import { CalendarsByDateModel } from '../models/calendars.list.model';

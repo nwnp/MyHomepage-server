@@ -1,7 +1,7 @@
-import { IUserToken } from './../../common/interfaces/user.interface';
-import { ERROR } from './../../common/constant/error-handling';
+import { IUserToken } from '../../common/interfaces/user.interface';
+import { ERROR } from '../../common/constant/error-handling';
 import { GraphQLError } from 'graphql';
-import { UsersDao } from './../../users/dao/users.dao';
+import { UsersDao } from '../../users/dao/users.dao';
 import { Injectable } from '@nestjs/common';
 import { UserLoginInput } from 'src/users/models/user.login.model';
 import { JwtService } from '@nestjs/jwt';

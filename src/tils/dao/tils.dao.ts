@@ -1,4 +1,4 @@
-import { CalendarsDao } from './../../calendars/dao/calendars.dao';
+import { CalendarsDao } from '../../calendars/dao/calendars.dao';
 import { ERROR } from 'src/common/constant/error-handling';
 import { GraphQLError } from 'graphql';
 import { InjectRepository } from '@nestjs/typeorm';
