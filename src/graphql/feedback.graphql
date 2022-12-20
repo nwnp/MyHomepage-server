@@ -1,0 +1,17 @@
+type Feedback {
+  id: ID
+  title: String
+  content: String
+  createdAt: String
+  UserId: Int
+}
+
+input InputFeedback {
+  title: String
+  content: String
+  UserId: Int
+}
+
+type Mutation {
+  registerFeedback(feedback: InputFeedback!): Boolean!
+}

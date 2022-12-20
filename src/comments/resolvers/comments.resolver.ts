@@ -7,6 +7,7 @@ import { Comment } from 'src/common/databases/comment.entity';
 import { CommentUpdateModel } from '../models/comment.update.model';
 import { CurrentUser } from 'src/common/functions/current.user';
 import { User } from 'src/common/databases/users.entity';
+import { CommentDeleteModel } from '../models/comment.delete.model';
 
 @Resolver()
 export class CommentsResolver {
@@ -39,9 +40,9 @@ export class CommentsResolver {
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async deleteComment(
-    @Args('commentId') commentId: number,
+    @Args('commentInfo') commentInfo: CommentDeleteModel,
     @CurrentUser() user: User,
   ): Promise<boolean | Error> {
-    return await this.commentsService.deleteComment(commentId, user.id);
+    return await this.commentsService.deleteComment(commentInfo);
   }
 }
