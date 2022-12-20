@@ -1,3 +1,4 @@
+import { FeedbacksModule } from './../feedbacks/feedbacks.module';
 import { CommentsModule } from '../comments/comments.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -25,11 +26,14 @@ import { TilComment } from 'src/common/databases/til-comments.entity';
 import { Email } from 'src/common/databases/emails.entity';
 import { EmailsModule } from 'src/emails/emails.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { Feedback } from 'src/common/databases/feedback.entity';
+import slackConfig from 'src/config/slack.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      load: [slackConfig],
+    }),
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: {
@@ -74,6 +78,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         Til,
         TilComment,
         Email,
+        Feedback,
       ],
       synchronize: true,
     }),
@@ -98,6 +103,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
     CalendarsModule,
     TilsModule,
     EmailsModule,
+    FeedbacksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
