@@ -17,6 +17,7 @@ import { Calendar } from './calendars.entity';
 import { Til } from './tils.entity';
 import { TilComment } from './til-comments.entity';
 import { Email } from './emails.entity';
+import { Feedback } from './feedback.entity';
 
 @Entity('User')
 export class User {
@@ -81,6 +82,13 @@ export class User {
   @IsString()
   blogUrl: string;
 
+  @Column({
+    nullable: true,
+    default: 'user',
+  })
+  @IsString()
+  user_type: string;
+
   @CreateDateColumn()
   @IsDate()
   createdAt: Date;
@@ -91,6 +99,9 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post;
+
+  @OneToMany(() => Feedback, (post) => post.user)
+  feedbacks: Feedback;
 
   @OneToMany(() => VisitLog, (log) => log.user)
   logs: VisitLog;

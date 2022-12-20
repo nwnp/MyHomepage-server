@@ -5,6 +5,7 @@ import { CommentsDao } from '../dao/comments.dao';
 import { Injectable } from '@nestjs/common';
 import { Comment } from 'src/common/databases/comment.entity';
 import { CommentUpdateModel } from '../models/comment.update.model';
+import { CommentDeleteModel } from '../models/comment.delete.model';
 
 @Injectable()
 export class CommentsService {
@@ -42,15 +43,16 @@ export class CommentsService {
   }
 
   async deleteComment(
-    commentId: number,
-    userId: number,
+    commentInfo: CommentDeleteModel,
   ): Promise<boolean | Error> {
-    const isExistComment = await this.commentsDao.getCommentById(commentId);
+    const isExistComment = await this.commentsDao.getCommentById(
+      commentInfo.id,
+    );
     if (!isExistComment)
       return new GraphQLError('SERVER ERROR', ERROR.INVALID_COMMENT_ERROR);
 
-    if (userId != isExistComment.CommentedUserId)
+    if (commentInfo.commentedUserId != isExistComment.CommentedUserId)
       return new GraphQLError('INVALID USER', ERROR.INVALID_USER);
-    return await this.commentsDao.deleteComment(commentId);
+    return await this.commentsDao.deleteComment(commentInfo.id);
   }
 }
