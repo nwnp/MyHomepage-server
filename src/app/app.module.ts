@@ -86,13 +86,15 @@ import slackConfig from 'src/config/slack.config';
       driver: ApolloDriver,
       debug: false,
       cache: 'bounded',
-      playground: process.env.NODE_ENV === 'production' ? false : true,
+      // playground: process.env.NODE_ENV === 'production' ? false : true,
+      playground: false,
       typePaths: ['./**/*.graphql'],
       cors: {
         origin: [
-          process.env.NODE_ENV === 'production'
-            ? 'https://my-page.co.kr'
-            : 'http://localhost:8081',
+          'https://my-page.co.kr',
+          // process.env.NODE_ENV === 'production'
+          //   ? 'https://my-page.co.kr'
+          //   : 'http://localhost:8081',
         ],
         credentials: true,
       },
