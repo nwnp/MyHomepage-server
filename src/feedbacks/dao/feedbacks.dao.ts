@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Feedback } from 'src/common/databases/feedback.entity';
@@ -30,6 +31,7 @@ export class FeedbacksDao {
     } catch (error) {
       console.log(error);
       this.logger.error('피드백 저장 에러');
+      throw new GraphQLError('SERVER ERROR');
     }
   }
 }
