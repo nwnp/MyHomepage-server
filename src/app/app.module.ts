@@ -85,6 +85,7 @@ import slackConfig from 'src/config/slack.config';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       debug: false,
+      cache: 'bounded',
       playground: process.env.NODE_ENV === 'production' ? false : true,
       typePaths: ['./**/*.graphql'],
       cors: {
