@@ -23,6 +23,11 @@ export class UserSignupModel {
   @Field(() => String)
   @IsString()
   @IsNotEmpty()
+  name: string;
+
+  @Field(() => String)
+  @IsString()
+  @IsNotEmpty()
   @Length(8)
   password: string;
 
