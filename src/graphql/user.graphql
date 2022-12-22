@@ -4,6 +4,7 @@ type User {
   name: String
   password: String!
   nickname: String!
+  name: String!
   gender: String
   job: String
   githubUrl: String
@@ -20,6 +21,7 @@ input UserData {
   email: String
   password: String
   nickname: String
+  name: String
   gender: String
   job: String
   githubUrl: String
@@ -45,7 +47,8 @@ input UserFind {
 type Query {
   me(id: ID!): User!
   allUser: [User!]!
-  searchUser(nickname: String!): User!
+  searchUserByNickname(nickname: String!): [User]
+  searchUserByEmail(email: String!): User
   userCheck(userInfo: UserCheck!): Boolean!
   userFind(user: UserFind!): User!
 }

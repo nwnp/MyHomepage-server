@@ -24,7 +24,7 @@ export class UsersDao {
     }
   }
 
-  async getUserByEmail(email: string) {
+  async getUserByEmail(email: string): Promise<User> {
     try {
       const user = await this.usersRepository.findOne({ where: { email } });
       return user;
@@ -33,12 +33,35 @@ export class UsersDao {
     }
   }
 
+  /* get user by nickname - reuse API */
+  // only one
   async getUserByNickname(nickname: string) {
     try {
       const user = await this.usersRepository.findOne({ where: { nickname } });
       return user;
     } catch (error) {
       throw new GraphQLError('Server Error', ERROR.INVALID_USER);
+    }
+  }
+
+  /* get user by nickname - Schema API */
+  // user list
+  async searchUserByNickname(nickname: string): Promise<User[]> {
+    try {
+      this.logger.verbose('닉네임으로 유저 찾기');
+      const users = await this.dataSource
+        .getRepository(User)
+        .createQueryBuilder('user')
+        .where(`user.nickname LIKE '%${nickname}%'`)
+        .getMany();
+      return users;
+    } catch (error) {
+      this.logger.error('GET_USERS_BY_NICKNAME_ERROR');
+      console.error(error);
+      throw new GraphQLError(
+        'SERVER ERROR',
+        ERROR.SERVER_ERROR('닉네임으로 유저 찾기 ERROR'),
+      );
     }
   }
 
@@ -67,6 +90,7 @@ export class UsersDao {
     try {
       this.logger.verbose('Start Transaction for signup');
       const newUser = await this.usersRepository.save(userInfo);
+      await queryRunner.commitTransaction();
       return newUser;
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -101,6 +125,7 @@ export class UsersDao {
         .where('id = :id', { id: parseInt(user.id) })
         .execute();
 
+      await queryRunner.commitTransaction();
       this.logger.verbose('Success transaction');
       return updatedUser;
     } catch (error) {

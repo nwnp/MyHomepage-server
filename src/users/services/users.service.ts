@@ -48,6 +48,29 @@ export class UsersService {
     return true;
   }
 
+  // search user by nickname API
+  async searchUserByNickname(nickname: string): Promise<User[]> {
+    if (nickname.trim() === '') {
+      throw new GraphQLError(
+        '유효하지 않은 닉네임',
+        ERROR.INVALID_INPUT('INVALID_NICKNAME'),
+      );
+    }
+
+    return await this.usersDao.searchUserByNickname(nickname);
+  }
+
+  // search user by email API
+  async searchUserByEmail(email: string): Promise<User> {
+    if (email.trim() === '') {
+      throw new GraphQLError(
+        '유효하지 않은 이메일',
+        ERROR.INVALID_INPUT('INVALID_EMAIL'),
+      );
+    }
+    return await this.usersDao.getUserByEmail(email);
+  }
+
   async signup(user: UserSignupModel): Promise<User> {
     const { email, password, nickname, blogUrl, githubUrl, job, gender } = user;
     const isExistEmail = await this.usersDao.getUserByEmail(email);

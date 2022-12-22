@@ -191,6 +191,14 @@ export const ERROR = {
       },
     };
   },
+  INVALID_INPUT(message: string) {
+    return {
+      extensions: {
+        code: message,
+        success: false,
+      },
+    };
+  },
   MAILER(message: string) {
     return {
       extensions: {

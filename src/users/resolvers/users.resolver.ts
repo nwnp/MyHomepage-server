@@ -43,6 +43,20 @@ export class UserResolver {
     return this.usersService.userFind(user);
   }
 
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  async searchUserByNickname(
+    @Args('nickname') nickname: string,
+  ): Promise<User[]> {
+    return await this.usersService.searchUserByNickname(nickname);
+  }
+
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  async searchUserByEmail(@Args('email') email: string): Promise<User> {
+    return await this.usersService.searchUserByEmail(email);
+  }
+
   @Mutation(() => Token)
   async login(@Args('userInfo') userInfo: UserLoginInput): Promise<IUserToken> {
     return await this.authService.validateUser(userInfo);
