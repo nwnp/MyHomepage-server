@@ -34,4 +34,8 @@ export class FollowsService {
       ? await this.followsDao.registerUnfollowing(info)
       : await this.followsDao.registerFollowing(info);
   }
+
+  async followCheck(userId: number, visitUserId: number): Promise<boolean> {
+    return await this.followsDao.followCheck(userId, visitUserId);
+  }
 }
