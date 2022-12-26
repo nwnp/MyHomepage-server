@@ -31,6 +31,7 @@ type Following {
   FollowingId: Int
   FollowerId: Int
   followers: User
+  followings: User
 }
 
 input FollowList {
@@ -41,6 +42,7 @@ input FollowList {
 type Query {
   followsForLogin(id: ID!): FollowCount! # count만 return
   followList(info: FollowList!): [Following] # 나를 팔로우하고 있는 user list API
+  followCheck(userId: Int!): Boolean # userId = paramsId
 }
 
 type Mutation {

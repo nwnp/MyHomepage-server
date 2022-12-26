@@ -77,7 +77,12 @@ export class UserResolver {
 
   @Mutation(() => User)
   @UseGuards(GqlAuthGuard)
-  async updateUser(@Args('user') user: UserUpdateModel): Promise<boolean> {
-    return (await this.usersService.updateUser(user)).affected ? true : false;
+  async updateUser(
+    @Args('user') user: UserUpdateModel,
+    @CurrentUser() userInfo: User,
+  ): Promise<boolean> {
+    return (await this.usersService.updateUser(user, userInfo.id)).affected
+      ? true
+      : false;
   }
 }
