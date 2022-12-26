@@ -111,9 +111,9 @@ export class UsersService {
     return await this.usersDao.signup(newUser);
   }
 
-  async updateUser(user: UserUpdateModel): Promise<any> {
+  async updateUser(user: UserUpdateModel, userId: number): Promise<any> {
     const userInfo = { ...user };
-    const updatedUser = await this.usersDao.update(userInfo);
+    const updatedUser = await this.usersDao.update(userInfo, userId);
     return updatedUser;
   }
 }

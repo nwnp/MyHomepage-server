@@ -19,7 +19,6 @@ export class FollowsDao {
   // 나를 팔로우하는 user API
   async followingMe(userId: number): Promise<Follow[]> {
     try {
-      console.log('following me');
       const followerList = await this.dataSource
         .getRepository(Follow)
         .createQueryBuilder('follow')
@@ -39,7 +38,6 @@ export class FollowsDao {
   // 내가 팔로우하고 있는 user API
   async imFollowing(userId: number): Promise<Follow[]> {
     try {
-      console.log('im following');
       const followerList = await this.dataSource
         .getRepository(Follow)
         .createQueryBuilder('follow')
@@ -53,6 +51,24 @@ export class FollowsDao {
         'SERVER ERROR',
         ERROR.FOLLOWING('IM_FOLLOWING_API_ERROR'),
       );
+    }
+  }
+
+  // userId: paramsId
+  // visitedUserId: cookie에 등록된 id
+  async followCheck(userId: number, visitUserId: number): Promise<boolean> {
+    try {
+      const check = await this.dataSource
+        .getRepository(Follow)
+        .createQueryBuilder('follow')
+        .where('follow.FollowerId = :FollowerId', { FollowerId: userId })
+        .andWhere('follow.FollowingId = :FollowingId', {
+          FollowingId: visitUserId,
+        })
+        .execute();
+      return check.length === 0 ? false : true;
+    } catch (error) {
+      console.error(error);
     }
   }
 

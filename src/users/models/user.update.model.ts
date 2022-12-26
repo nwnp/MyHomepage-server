@@ -1,13 +1,8 @@
-import { IsOptional, IsString, Length, IsNotEmpty } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
 export class UserUpdateModel {
-  @Field(() => String)
-  @IsNotEmpty()
-  @IsString()
-  id: string;
-
   @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()

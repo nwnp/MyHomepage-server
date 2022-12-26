@@ -107,7 +107,7 @@ export class UsersDao {
     return users;
   }
 
-  async update(user: UserUpdateModel) {
+  async update(user: UserUpdateModel, userId: number) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -122,7 +122,7 @@ export class UsersDao {
           githubUrl: user.githubUrl,
           blogUrl: user.blogUrl,
         })
-        .where('id = :id', { id: parseInt(user.id) })
+        .where('id = :id', { id: ~~userId })
         .execute();
 
       await queryRunner.commitTransaction();

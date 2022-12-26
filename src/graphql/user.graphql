@@ -17,7 +17,6 @@ type Token {
 }
 
 input UserData {
-  id: ID
   email: String
   password: String
   nickname: String

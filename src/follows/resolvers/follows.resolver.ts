@@ -32,6 +32,15 @@ export class FollowsResolver {
       : await this.followsService.followList(info.userId, 'imFollowing');
   }
 
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async followCheck(
+    @Args('userId') userId: number,
+    @CurrentUser() user: User,
+  ): Promise<boolean> {
+    return await this.followsService.followCheck(userId, user.id); // 4 16
+  }
+
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async registerFollowing(
